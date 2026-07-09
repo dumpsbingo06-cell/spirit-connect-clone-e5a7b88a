@@ -77,15 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BIN Lookup — Free Bank Card BIN/IIN Checker" },
+      { title: "Binly — Professional BIN/IIN Lookup for Bank Cards" },
       {
         name: "description",
         content:
-          "Free BIN lookup tool. Enter the first 6–8 digits of a card to instantly find the issuing bank, scheme, brand, card type, country and currency.",
+          "Binly is a professional BIN lookup tool. Enter the first 6–8 digits of a card to instantly identify the issuing bank, scheme, brand, card type, country and currency.",
       },
-      { name: "author", content: "BIN Lookup" },
-      { name: "keywords", content: "BIN lookup, IIN checker, bank identification number, card checker, BIN database" },
-      { property: "og:title", content: "BIN Lookup — Free Bank Card BIN/IIN Checker" },
+      { name: "author", content: "Binly" },
+      { name: "keywords", content: "Binly, BIN lookup, IIN checker, bank identification number, card checker, BIN database" },
+      { name: "theme-color", content: "#1e3a8a" },
+      { property: "og:site_name", content: "Binly" },
+      { property: "og:title", content: "Binly — Professional BIN/IIN Lookup" },
       {
         property: "og:description",
         content:
@@ -93,12 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "BIN Lookup — Free Bank Card BIN/IIN Checker" },
-      { name: "description", content: "Free BIN lookup tool. Enter the first 6–8 digits of a card to instantly find the issuing bank, scheme, brand, card type, country and currency." },
-      { property: "og:description", content: "Free BIN lookup tool. Enter the first 6–8 digits of a card to instantly find the issuing bank, scheme, brand, card type, country and currency." },
-      { name: "twitter:description", content: "Free BIN lookup tool. Enter the first 6–8 digits of a card to instantly find the issuing bank, scheme, brand, card type, country and currency." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e6adf099-7cf9-470f-9719-2b092145c353/id-preview-c857d13a--8678e1d1-7a7f-4777-bfa8-909c6b3781a0.lovable.app-1783202811954.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e6adf099-7cf9-470f-9719-2b092145c353/id-preview-c857d13a--8678e1d1-7a7f-4777-bfa8-909c6b3781a0.lovable.app-1783202811954.png" },
+      { name: "twitter:title", content: "Binly — Professional BIN/IIN Lookup" },
+      { name: "twitter:description", content: "Instantly identify the bank, scheme, brand, country and type behind any card BIN." },
     ],
     links: [
       {
@@ -111,7 +109,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/binly-icon.png" },
+      { rel: "apple-touch-icon", href: "/binly-icon.png" },
     ],
   }),
   shellComponent: RootShell,
