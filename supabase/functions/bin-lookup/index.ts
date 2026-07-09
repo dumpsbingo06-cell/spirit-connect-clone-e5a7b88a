@@ -256,14 +256,36 @@ function hasBankContact(r: BinResult): boolean {
   return Boolean(r.bankUrl && r.bankPhone);
 }
 
+function backgroundTask(promise: Promise<unknown>): void {
+  const runtime = (globalThis as any).EdgeRuntime;
+  if (runtime && typeof runtime.waitUntil === "function") {
+    try { runtime.waitUntil(promise); return; } catch { /* fall through */ }
+  }
+  promise.catch(() => {});
+}
+
+async function enrichAndCache(primary: BinResult, raw: unknown): Promise<void> {
+  let enriched = primary;
+  if (primary.bankName && (!primary.bankUrl || !primary.bankPhone)) {
+    enriched = await enrichBankContact(primary);
+  }
+  await saveToCache(enriched, raw);
+}
+
 async function lookup(rawBin: string): Promise<Outcome> {
   const bin = sanitize(rawBin);
   if (bin.length < 6) return { status: "error", message: "Enter at least the first 6 digits of the card." };
 
+  // Fast path: any cache hit returns immediately. Bank-contact backfill happens in the background.
   const cached = await fromCache(bin);
-  if (cached && hasBankContact(cached)) return { status: "success", data: cached };
+  if (cached) {
+    if (!hasBankContact(cached) && cached.bankName) {
+      backgroundTask(enrichAndCache(cached, null));
+    }
+    return { status: "success", data: cached };
+  }
 
-  let primary: BinResult | null = cached;
+  let primary: BinResult | null = null;
   let primaryRaw: unknown = null;
   let anyReached = false;
 
@@ -276,10 +298,10 @@ async function lookup(rawBin: string): Promise<Outcome> {
     }
   }
   if (primary) {
-    if (primary.bankName && (!primary.bankUrl || !primary.bankPhone)) {
-      primary = await enrichBankContact(primary);
-    }
-    await saveToCache(primary, primaryRaw);
+    // Return provider data immediately; skip the slow web-scrape enrichment on hot path.
+    const snapshot = primary;
+    const rawSnapshot = primaryRaw;
+    backgroundTask(enrichAndCache(snapshot, rawSnapshot));
     return { status: "success", data: primary };
   }
   if (!anyReached) return { status: "error", message: "Could not reach any BIN provider. Please try again." };
