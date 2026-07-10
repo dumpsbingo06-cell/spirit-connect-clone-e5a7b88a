@@ -295,23 +295,25 @@ function backgroundTask(promise: Promise<unknown>): void {
   promise.catch(() => {});
 }
 
-async function enrichAndCache(primary: BinResult, raw: unknown): Promise<void> {
+async function enrichAndCache(primary: BinResult, raw: unknown): Promise<BinResult> {
   let enriched = primary;
   if (primary.bankName && (!primary.bankUrl || !primary.bankPhone)) {
     enriched = await enrichBankContact(primary);
   }
   await saveToCache(enriched, raw);
+  return enriched;
 }
 
 async function lookup(rawBin: string): Promise<Outcome> {
   const bin = sanitize(rawBin);
   if (bin.length < 6) return { status: "error", message: "Enter at least the first 6 digits of the card." };
 
-  // Fast path: any cache hit returns immediately. Bank-contact backfill happens in the background.
+  // Fast path: cache hit. If bank contact is missing, enrich synchronously so users always get website + phone.
   const cached = await fromCache(bin);
   if (cached) {
-    if (!hasBankContact(cached) && cached.bankName) {
-      backgroundTask(enrichAndCache(cached, null));
+    if (cached.bankName && !hasBankContact(cached)) {
+      const enriched = await enrichAndCache(cached, null);
+      return { status: "success", data: { ...enriched, source: "cache" } };
     }
     return { status: "success", data: cached };
   }
@@ -329,11 +331,8 @@ async function lookup(rawBin: string): Promise<Outcome> {
     }
   }
   if (primary) {
-    // Return provider data immediately; skip the slow web-scrape enrichment on hot path.
-    const snapshot = primary;
-    const rawSnapshot = primaryRaw;
-    backgroundTask(enrichAndCache(snapshot, rawSnapshot));
-    return { status: "success", data: primary };
+    const enriched = await enrichAndCache(primary, primaryRaw);
+    return { status: "success", data: enriched };
   }
   if (!anyReached) return { status: "error", message: "Could not reach any BIN provider. Please try again." };
   return { status: "not_found" };
