@@ -144,6 +144,31 @@ function parseAntipublic(bin: string, r: any): BinResult | null {
   };
   return hasData(out) ? out : null;
 }
+function parseFreeBinChecker(bin: string, r: any): BinResult | null {
+  if (!r || typeof r !== "object" || r.valid === false) return null;
+  const country = r.country ?? {};
+  const bank = r.bank ?? {};
+  const card = r.card ?? {};
+  const alpha2: string | null = country.alpha2 ?? null;
+  const out: BinResult = {
+    bin,
+    scheme: titleCase(card.scheme ?? r.scheme),
+    brand: titleCase(card.brand ?? r.brand ?? card.scheme),
+    cardType: titleCase(card.type ?? r.type),
+    category: titleCase(card.category ?? card.tier ?? r.category),
+    bankName: bank.name ?? null,
+    bankUrl: bank.url ?? bank.website ?? null,
+    bankPhone: bank.phone ?? null,
+    countryName: country.name ?? null,
+    countryCode: alpha2,
+    countryEmoji: country.emoji ?? emojiFromAlpha2(alpha2),
+    currency: country.currency ?? null,
+    prepaid: typeof card.prepaid === "boolean" ? card.prepaid : null,
+    commercial: null,
+    source: "api",
+  };
+  return hasData(out) ? out : null;
+}
 
 const providers: Provider[] = [
   {
@@ -163,6 +188,12 @@ const providers: Provider[] = [
     url: (b) => `https://lookup.binlist.net/${encodeURIComponent(b)}`,
     headers: { Accept: "application/json", "Accept-Version": "3" },
     parse: parseBinlist,
+  },
+  {
+    name: "freebinchecker",
+    url: (b) => `https://api.freebinchecker.com/bin/${encodeURIComponent(b)}`,
+    headers: { Accept: "application/json", "User-Agent": "bin-lookup-app" },
+    parse: parseFreeBinChecker,
   },
 ];
 
