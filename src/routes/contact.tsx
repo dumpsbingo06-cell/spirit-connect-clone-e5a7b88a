@@ -9,17 +9,15 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — BIN Insight" },
-      { name: "description", content: "Reach the BIN Insight team for general questions or advertising inquiries." },
+      { title: "Contact — Binly" },
+      { name: "description", content: "Reach the Binly team." },
     ],
   }),
   component: ContactPage,
 });
 
 function ContactPage() {
-  const [category, setCategory] = useState<"general" | "advertisement">("general");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -30,9 +28,10 @@ function ContactPage() {
     setErr(null);
     setBusy(true);
     try {
-      await submitContactMessage({ category, name, email, message });
+      await submitContactMessage({ subject, message });
       setDone(true);
-      setName(""); setEmail(""); setMessage("");
+      setSubject("");
+      setMessage("");
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Failed to send");
     } finally {
@@ -52,7 +51,7 @@ function ContactPage() {
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Direct line</p>
             <h1 className="mt-1 font-display text-2xl font-semibold">Contact the team</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Reach us for support or to run an advertisement on BIN Insight.
+              Send us a message — we'll get back to you.
             </p>
           </div>
 
@@ -65,34 +64,11 @@ function ContactPage() {
             </div>
           ) : (
             <form onSubmit={onSubmit} className="space-y-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Category</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(["general", "advertisement"] as const).map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => setCategory(c)}
-                      className={`rounded-lg border px-4 py-3 text-sm font-medium capitalize transition-all ${
-                        category === c
-                          ? "border-primary bg-primary/10 text-primary shadow-glow"
-                          : "border-border bg-background text-muted-foreground hover:border-primary/40"
-                      }`}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <Field label="Name">
-                <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={100} required />
-              </Field>
-              <Field label="Email">
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={255} required />
+              <Field label="Subject">
+                <Input value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={100} required />
               </Field>
               <Field label="Message">
-                <Textarea value={message} onChange={(e) => setMessage(e.target.value)} maxLength={2000} rows={5} required />
+                <Textarea value={message} onChange={(e) => setMessage(e.target.value)} maxLength={2000} rows={6} required />
                 <p className="mt-1 text-right text-[11px] text-muted-foreground">{message.length}/2000</p>
               </Field>
 

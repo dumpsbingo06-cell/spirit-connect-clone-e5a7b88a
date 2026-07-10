@@ -40,23 +40,24 @@ export async function updateSiteSettings(input: SiteSettings): Promise<void> {
 }
 
 export async function submitContactMessage(input: {
-  category: string;
-  name: string;
-  email: string;
+  subject: string;
   message: string;
 }): Promise<void> {
-  const cat = input.category === "advertisement" ? "advertisement" : "general";
-  const name = String(input.name ?? "").trim().slice(0, 100);
-  const email = String(input.email ?? "").trim().slice(0, 255);
+  const subject = String(input.subject ?? "").trim().slice(0, 100);
   const message = String(input.message ?? "").trim().slice(0, 2000);
-  if (!name) throw new Error("Name is required");
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Invalid email");
+  if (!subject) throw new Error("Subject is required");
   if (!message) throw new Error("Message is required");
   const { error } = await supabase
     .from("contact_messages")
-    .insert({ category: cat, name, email, message });
+    .insert({
+      category: "general",
+      name: subject,
+      email: "anonymous@binly.local",
+      message,
+    });
   if (error) throw new Error(error.message);
 }
+
 
 export async function listContactMessages(): Promise<ContactMessage[]> {
   const { data } = await supabase
