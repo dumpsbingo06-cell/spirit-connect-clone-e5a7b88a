@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { Mail, MessageCircle, Send, ShieldCheck } from "lucide-react";
+import { MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { getSiteSettings, type SiteSettings } from "@/lib/site.api";
+
 
 export function SiteFooter() {
   const [s, setS] = useState<SiteSettings>({ telegram_url: "", jabber_url: "" });
