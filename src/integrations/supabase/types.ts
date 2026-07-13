@@ -152,6 +152,11 @@ export type Database = {
       site_settings: {
         Row: {
           created_at: string
+          hero_badge: string
+          hero_font: string
+          hero_highlight: string
+          hero_subtitle: string
+          hero_title: string
           id: number
           jabber_url: string
           telegram_url: string
@@ -159,6 +164,11 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          hero_badge?: string
+          hero_font?: string
+          hero_highlight?: string
+          hero_subtitle?: string
+          hero_title?: string
           id?: number
           jabber_url?: string
           telegram_url?: string
@@ -166,6 +176,11 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          hero_badge?: string
+          hero_font?: string
+          hero_highlight?: string
+          hero_subtitle?: string
+          hero_title?: string
           id?: number
           jabber_url?: string
           telegram_url?: string

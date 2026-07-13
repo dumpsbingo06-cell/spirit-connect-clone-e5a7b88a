@@ -4,7 +4,7 @@ import { getSiteSettings, type SiteSettings } from "@/lib/site.api";
 
 
 export function SiteFooter() {
-  const [s, setS] = useState<SiteSettings>({ telegram_url: "", jabber_url: "" });
+  const [s, setS] = useState<Pick<SiteSettings, "telegram_url" | "jabber_url">>({ telegram_url: "", jabber_url: "" });
   useEffect(() => {
     getSiteSettings().then(setS).catch(() => {});
   }, []);
