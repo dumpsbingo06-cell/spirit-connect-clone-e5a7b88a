@@ -35,7 +35,16 @@ function AdminPage() {
   const [banners, setBanners] = useState<AdBanner[]>([]);
   const [saving, setSaving] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [settings, setSettings] = useState<SiteSettings>({ telegram_url: "", jabber_url: "" });
+  const [settings, setSettings] = useState<SiteSettings>({
+    telegram_url: "",
+    jabber_url: "",
+    hero_badge: "Trusted BIN intelligence",
+    hero_title: "Identify any card in",
+    hero_highlight: "seconds",
+    hero_subtitle:
+      "Look up the issuing bank, scheme, brand, country and contact details behind the first digits of any card.",
+    hero_font: "Space Grotesk",
+  });
   const [savingSettings, setSavingSettings] = useState(false);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
 
