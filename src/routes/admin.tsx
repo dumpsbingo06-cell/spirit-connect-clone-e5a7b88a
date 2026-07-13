@@ -248,6 +248,83 @@ function AdminPage() {
           ))}
         </div>
 
+        {/* Homepage hero — editable content + font */}
+        <section className="mt-8 rounded-xl border border-border bg-card p-4 shadow-card">
+          <h2 className="mb-1 font-display text-lg font-semibold">Homepage hero</h2>
+          <p className="mb-4 text-xs text-muted-foreground">
+            Edit the text shown at the top of the homepage. Choose a font that matches your brand.
+          </p>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <LabeledInput
+              label="Badge (small pill above title)"
+              value={settings.hero_badge}
+              onChange={(v) => setSettings((s) => ({ ...s, hero_badge: v }))}
+            />
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Hero font
+              </span>
+              <select
+                value={settings.hero_font}
+                onChange={(e) =>
+                  setSettings((s) => ({ ...s, hero_font: e.target.value as SiteSettings["hero_font"] }))
+                }
+                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                {HERO_FONT_OPTIONS.map((f) => (
+                  <option key={f} value={f} style={{ fontFamily: `"${f}"` }}>
+                    {f}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <LabeledInput
+              label="Title (main heading)"
+              value={settings.hero_title}
+              onChange={(v) => setSettings((s) => ({ ...s, hero_title: v }))}
+            />
+            <LabeledInput
+              label="Highlighted word (gradient accent)"
+              value={settings.hero_highlight}
+              onChange={(v) => setSettings((s) => ({ ...s, hero_highlight: v }))}
+            />
+          </div>
+          <div className="mt-3">
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Subtitle
+              </span>
+              <textarea
+                value={settings.hero_subtitle}
+                onChange={(e) => setSettings((s) => ({ ...s, hero_subtitle: e.target.value }))}
+                rows={2}
+                className="w-full rounded-md border border-input bg-background p-3 text-sm"
+              />
+            </label>
+          </div>
+          <div
+            className="mt-4 rounded-lg border border-border/60 bg-background p-4 text-center"
+            style={{ fontFamily: `"${settings.hero_font}", ui-sans-serif, system-ui, sans-serif` }}
+          >
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Preview
+            </p>
+            <p className="text-3xl font-bold tracking-tight text-foreground">
+              {settings.hero_title}{" "}
+              <span className="bg-gradient-accent bg-clip-text text-transparent">
+                {settings.hero_highlight}
+              </span>
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{settings.hero_subtitle}</p>
+          </div>
+          <div className="mt-3">
+            <Button onClick={handleSaveSettings} disabled={savingSettings} size="sm">
+              {savingSettings ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              Save hero
+            </Button>
+          </div>
+        </section>
+
         {/* Site settings — social links */}
         <section className="mt-8 rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-1 font-display text-lg font-semibold">Footer links</h2>
