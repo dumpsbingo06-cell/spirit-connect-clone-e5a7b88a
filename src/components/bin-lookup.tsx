@@ -64,6 +64,29 @@ const LOCATION_FIELDS: FieldDef[] = [
 export function BinLookup() {
   const [bin, setBin] = useState("");
   const [view, setView] = useState<ViewState>({ status: "idle" });
+  const [hero, setHero] = useState<Pick<
+    SiteSettings,
+    "hero_badge" | "hero_title" | "hero_highlight" | "hero_subtitle" | "hero_font"
+  > | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSiteSettings()
+      .then((s) => {
+        if (cancelled) return;
+        setHero({
+          hero_badge: s.hero_badge,
+          hero_title: s.hero_title,
+          hero_highlight: s.hero_highlight,
+          hero_subtitle: s.hero_subtitle,
+          hero_font: s.hero_font,
+        });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -87,60 +110,119 @@ export function BinLookup() {
   const isLoading = view.status === "loading";
   const hasResult = view.status === "success";
 
+  const heroBadge = hero?.hero_badge ?? "Trusted BIN intelligence";
+  const heroTitle = hero?.hero_title ?? "Identify any card in";
+  const heroHighlight = hero?.hero_highlight ?? "seconds";
+  const heroSubtitle =
+    hero?.hero_subtitle ??
+    "Look up the issuing bank, scheme, brand, country and contact details behind the first digits of any card.";
+  const heroFont = hero?.hero_font ?? "Space Grotesk";
+  const digitsCount = bin.length;
+  const canSubmit = digitsCount >= 6 && !isLoading;
+
   return (
     <div className="w-full px-4 sm:px-6">
       {/* Hero */}
       <section className="mx-auto max-w-3xl text-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
           <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-          Trusted BIN intelligence
+          {heroBadge}
         </div>
-        <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Identify any card in{" "}
-          <span className="bg-gradient-accent bg-clip-text text-transparent">seconds</span>
+        <h1
+          className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-6xl"
+          style={{ fontFamily: `"${heroFont}", ui-sans-serif, system-ui, sans-serif` }}
+        >
+          {heroTitle}{" "}
+          <span className="bg-gradient-accent bg-clip-text text-transparent">{heroHighlight}</span>
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
-          Look up the issuing bank, scheme, brand, country and contact details behind the first digits of any card.
+        <p
+          className="mx-auto mt-3 max-w-xl text-base text-muted-foreground sm:text-lg"
+          style={{ fontFamily: `"${heroFont}", ui-sans-serif, system-ui, sans-serif` }}
+        >
+          {heroSubtitle}
         </p>
       </section>
 
-      {/* Search bar */}
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto mt-8 w-full max-w-2xl"
-      >
-        <div className="group relative rounded-2xl bg-gradient-accent p-[1.5px] shadow-glow transition-all focus-within:shadow-[0_0_0_4px_oklch(0.52_0.16_250_/_0.15),0_20px_50px_-20px_oklch(0.52_0.16_250_/_0.5)]">
-          <div className="flex flex-col gap-2 rounded-[calc(1rem-1px)] bg-card p-2 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                inputMode="numeric"
-                autoComplete="off"
-                placeholder="Enter first 6 digits (e.g. 457173)"
-                value={bin}
-                onChange={(e) => setBin(e.target.value.replace(/\D/g, "").slice(0, 8))}
-                className="h-14 border-0 bg-transparent pl-12 text-lg font-medium tracking-[0.25em] shadow-none focus-visible:ring-0"
-                aria-label="Card BIN"
-              />
+      {/* Search bar — premium card */}
+      <form onSubmit={handleSubmit} className="mx-auto mt-10 w-full max-w-2xl">
+        <div className="group relative">
+          {/* animated glow ring */}
+          <div
+            aria-hidden
+            className="absolute -inset-0.5 rounded-3xl bg-gradient-accent opacity-40 blur-xl transition-opacity duration-500 group-focus-within:opacity-70"
+          />
+          <div className="relative rounded-3xl bg-gradient-accent p-[1.5px] shadow-glow transition-all">
+            <div className="rounded-[calc(1.5rem-1px)] bg-card">
+              {/* top meta bar */}
+              <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-2.5">
+                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-gradient-accent text-primary-foreground">
+                    <CreditCard className="h-3.5 w-3.5" />
+                  </span>
+                  BIN / IIN lookup
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground">
+                  <Lock className="h-3 w-3" />
+                  Secure
+                </div>
+              </div>
+
+              {/* input row */}
+              <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-stretch sm:p-4">
+                <div className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                  <Input
+                    inputMode="numeric"
+                    autoComplete="off"
+                    placeholder="4571 73"
+                    value={bin}
+                    onChange={(e) => setBin(e.target.value.replace(/\D/g, "").slice(0, 8))}
+                    className="h-14 border-0 bg-transparent pl-12 pr-20 font-mono text-2xl font-semibold tracking-[0.35em] shadow-none placeholder:font-mono placeholder:tracking-[0.35em] placeholder:text-muted-foreground/40 focus-visible:ring-0"
+                    aria-label="Card BIN"
+                  />
+                  {/* digit counter */}
+                  <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
+                    <span
+                      className={`rounded-md border px-2 py-0.5 font-mono text-[11px] font-semibold ${
+                        digitsCount >= 6
+                          ? "border-primary/40 bg-primary/10 text-primary"
+                          : "border-border/60 bg-muted/60 text-muted-foreground"
+                      }`}
+                    >
+                      {digitsCount}/8
+                    </span>
+                  </div>
+                </div>
+                <Button
+                  type="submit"
+                  disabled={!canSubmit}
+                  className="h-14 gap-2 rounded-xl bg-gradient-accent px-8 text-base font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Search className="h-5 w-5" />
+                  )}
+                  {isLoading ? "Checking…" : "Lookup"}
+                </Button>
+              </div>
+
+              {/* footer strip */}
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 px-5 py-2.5 text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-success" />
+                  We never store or share the card number
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Zap className="h-3.5 w-3.5 text-primary" />
+                  Average response under 300&nbsp;ms
+                </span>
+              </div>
             </div>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="h-14 gap-2 rounded-xl bg-gradient-accent px-8 text-base font-semibold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <Search className="h-5 w-5" />
-              )}
-              {isLoading ? "Checking…" : "Check BIN"}
-            </Button>
           </div>
         </div>
-        <p className="mt-3 text-center text-xs text-muted-foreground">
-          Enter 6–8 digits. We never store or share the card number.
-        </p>
       </form>
+
 
       {/* Alerts */}
       <div className="mx-auto mt-6 w-full max-w-4xl">
