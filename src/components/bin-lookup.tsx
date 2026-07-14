@@ -143,85 +143,37 @@ export function BinLookup() {
         </p>
       </section>
 
-      {/* Search bar — premium card */}
+      {/* Search bar — minimal professional */}
       <form onSubmit={handleSubmit} className="mx-auto mt-10 w-full max-w-2xl">
-        <div className="group relative">
-          {/* animated glow ring */}
-          <div
-            aria-hidden
-            className="absolute -inset-0.5 rounded-3xl bg-gradient-accent opacity-40 blur-xl transition-opacity duration-500 group-focus-within:opacity-70"
-          />
-          <div className="relative rounded-3xl bg-gradient-accent p-[1.5px] shadow-glow transition-all">
-            <div className="rounded-[calc(1.5rem-1px)] bg-card">
-              {/* top meta bar */}
-              <div className="flex items-center justify-between gap-2 border-b border-border/60 px-5 py-2.5">
-                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-gradient-accent text-primary-foreground">
-                    <CreditCard className="h-3.5 w-3.5" />
-                  </span>
-                  BIN / IIN lookup
-                </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground">
-                  <Lock className="h-3 w-3" />
-                  Secure
-                </div>
-              </div>
-
-              {/* input row */}
-              <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-stretch sm:p-4">
-                <div className="relative flex-1">
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
-                  <Input
-                    inputMode="numeric"
-                    autoComplete="off"
-                    placeholder="4571 73"
-                    value={bin}
-                    onChange={(e) => setBin(e.target.value.replace(/\D/g, "").slice(0, 8))}
-                    className="h-14 border-0 bg-transparent pl-12 pr-20 font-mono text-2xl font-semibold tracking-[0.35em] shadow-none placeholder:font-mono placeholder:tracking-[0.35em] placeholder:text-muted-foreground/40 focus-visible:ring-0"
-                    aria-label="Card BIN"
-                  />
-                  {/* digit counter */}
-                  <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
-                    <span
-                      className={`rounded-md border px-2 py-0.5 font-mono text-[11px] font-semibold ${
-                        digitsCount >= 6
-                          ? "border-primary/40 bg-primary/10 text-primary"
-                          : "border-border/60 bg-muted/60 text-muted-foreground"
-                      }`}
-                    >
-                      {digitsCount}/8
-                    </span>
-                  </div>
-                </div>
-                <Button
-                  type="submit"
-                  disabled={!canSubmit}
-                  className="h-14 gap-2 rounded-xl bg-gradient-accent px-8 text-base font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <Search className="h-5 w-5" />
-                  )}
-                  {isLoading ? "Checking…" : "Lookup"}
-                </Button>
-              </div>
-
-              {/* footer strip */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 px-5 py-2.5 text-[11px] text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-success" />
-                  We never store or share the card number
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Zap className="h-3.5 w-3.5 text-primary" />
-                  Average response under 300&nbsp;ms
-                </span>
-              </div>
-            </div>
+        <div className="group relative flex items-stretch overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-colors focus-within:border-foreground">
+          <div className="pointer-events-none flex items-center pl-5 text-muted-foreground group-focus-within:text-foreground">
+            <Search className="h-5 w-5" />
           </div>
+          <Input
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="Enter first 6 digits"
+            value={bin}
+            onChange={(e) => setBin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            maxLength={6}
+            className="h-16 flex-1 border-0 bg-transparent px-4 font-mono text-xl font-semibold tracking-[0.3em] shadow-none placeholder:font-sans placeholder:text-base placeholder:font-normal placeholder:tracking-normal placeholder:text-muted-foreground/60 focus-visible:ring-0"
+            aria-label="Card BIN"
+          />
+          <Button
+            type="submit"
+            disabled={!canSubmit}
+            className="m-2 h-auto gap-2 rounded-xl bg-foreground px-6 text-sm font-semibold text-background hover:bg-foreground/90 disabled:opacity-40 sm:px-8"
+          >
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+            <span className="hidden sm:inline">{isLoading ? "Checking" : "Lookup"}</span>
+          </Button>
         </div>
+        <p className="mt-3 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Card numbers are never stored or shared
+        </p>
       </form>
+
 
 
       {/* Alerts */}
