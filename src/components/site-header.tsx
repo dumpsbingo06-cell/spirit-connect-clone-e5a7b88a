@@ -31,6 +31,17 @@ export function SiteHeader() {
           >
             Contact
           </Link>
+          <div className="ml-1">
+            <ThemeToggle />
+          </div>
+        </nav>
+          </Link>
+          <Link
+            to="/contact"
+            className="rounded-md px-3 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:text-foreground"
+          >
+            Contact
+          </Link>
         </nav>
       </div>
     </header>
