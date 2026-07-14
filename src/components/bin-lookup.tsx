@@ -85,6 +85,14 @@ export function BinLookup() {
     };
   }, []);
 
+  const resultsRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (view.status === "success" && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [view.status]);
+
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const cleaned = bin.replace(/\D/g, "");
