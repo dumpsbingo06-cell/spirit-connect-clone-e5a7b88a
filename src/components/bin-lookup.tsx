@@ -1,9 +1,7 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
   Search,
   Loader2,
-  Database,
-  Zap,
   AlertCircle,
   SearchX,
   CreditCard,
@@ -17,7 +15,6 @@ import {
   Layers,
   Tag,
   ShieldCheck,
-  Lock,
 } from "lucide-react";
 
 import { lookupBin, type BinResult } from "@/lib/bin-lookup.api";
@@ -87,6 +84,14 @@ export function BinLookup() {
       cancelled = true;
     };
   }, []);
+
+  const resultsRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (view.status === "success" && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [view.status]);
+
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -168,10 +173,6 @@ export function BinLookup() {
             <span className="hidden sm:inline">{isLoading ? "Checking" : "Lookup"}</span>
           </Button>
         </div>
-        <p className="mt-3 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          Card numbers are never stored or shared
-        </p>
       </form>
 
 
@@ -202,32 +203,31 @@ export function BinLookup() {
 
       {/* Results */}
       {(isLoading || hasResult) && (
-        <section className="mx-auto mt-8 w-full max-w-5xl animate-fade-in">
-          <ResultsHeader data={data} isLoading={isLoading} />
+        <section ref={resultsRef} className="mx-auto mt-8 w-full max-w-5xl scroll-mt-24 animate-fade-in">
+          <ResultsHeader isLoading={isLoading} />
 
           {/* Hero summary card */}
-          <div className="mt-4 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card">
-            <div className="relative bg-gradient-hero p-6 sm:p-8">
-              <div className="absolute inset-0 opacity-20 mix-blend-overlay [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
-              <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-4">
+          <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-secondary text-foreground shadow-card">
+            <div className="relative p-5 sm:p-8">
+              <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-4">
                   <SchemeMark data={data} loading={isLoading} />
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/70">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                       BIN
                     </p>
                     {isLoading ? (
-                      <div className="mt-1 h-8 w-40 animate-pulse rounded bg-white/20" />
+                      <div className="mt-1 h-8 w-40 animate-pulse rounded bg-muted" />
                     ) : (
-                      <p className="font-mono text-2xl font-bold tracking-widest text-primary-foreground sm:text-3xl">
+                      <p className="font-mono text-2xl font-bold tracking-widest text-foreground sm:text-3xl break-all">
                         {data?.bin}
                       </p>
                     )}
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       {isLoading ? (
                         <>
-                          <span className="h-5 w-16 animate-pulse rounded-full bg-white/20" />
-                          <span className="h-5 w-20 animate-pulse rounded-full bg-white/20" />
+                          <span className="h-5 w-16 animate-pulse rounded-full bg-muted" />
+                          <span className="h-5 w-20 animate-pulse rounded-full bg-muted" />
                         </>
                       ) : (
                         <>
@@ -257,32 +257,11 @@ export function BinLookup() {
   );
 }
 
-function ResultsHeader({ data, isLoading }: { data: BinResult | null; isLoading: boolean }) {
+function ResultsHeader({ isLoading }: { isLoading: boolean }) {
   return (
-    <div className="flex items-center justify-between gap-3">
-      <div className="flex items-center gap-2">
-        <h2 className="font-display text-xl font-semibold text-foreground">Lookup results</h2>
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-      </div>
-      {data && (
-        <span
-          className={`inline-flex animate-scale-in items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-            data.source === "cache"
-              ? "border border-border bg-secondary text-secondary-foreground"
-              : "bg-gradient-accent text-primary-foreground shadow-sm"
-          }`}
-        >
-          {data.source === "cache" ? (
-            <>
-              <Database className="h-3.5 w-3.5" /> Cached
-            </>
-          ) : (
-            <>
-              <Zap className="h-3.5 w-3.5" /> Live
-            </>
-          )}
-        </span>
-      )}
+    <div className="flex items-center gap-3">
+      <h2 className="font-display text-xl font-semibold text-foreground">Lookup results</h2>
+      {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
     </div>
   );
 }
@@ -305,25 +284,25 @@ function SchemeMark({ data, loading }: { data: BinResult | null; loading: boolea
 
 function CountryDisplay({ data, loading }: { data: BinResult | null; loading: boolean }) {
   if (loading) {
-    return <div className="h-14 w-40 animate-pulse rounded-xl bg-white/20" />;
+    return <div className="h-14 w-full animate-pulse rounded-xl bg-muted sm:w-40" />;
   }
   if (!data?.countryName) return null;
   const flagCode = /^[a-z]{2}$/i.test(data.countryCode ?? "") ? data.countryCode!.toLowerCase() : null;
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
+    <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-background/60 px-4 py-3 sm:w-auto">
       {flagCode ? (
         <span
           aria-label={`${data.countryName} flag`}
-          className={`fi fi-${flagCode} block h-8 w-12 rounded shadow-sm`}
+          className={`fi fi-${flagCode} block h-8 w-12 shrink-0 rounded shadow-sm`}
         />
       ) : (
         <span className="text-3xl leading-none">{data.countryEmoji ?? "🏳️"}</span>
       )}
-      <div>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-primary-foreground/70">
+      <div className="min-w-0">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
           Country
         </p>
-        <p className="font-display text-lg font-semibold uppercase tracking-wide text-primary-foreground">
+        <p className="font-display text-base font-semibold uppercase tracking-wide text-foreground sm:text-lg">
           {data.countryName}
         </p>
       </div>
@@ -333,7 +312,7 @@ function CountryDisplay({ data, loading }: { data: BinResult | null; loading: bo
 
 function Pill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary-foreground backdrop-blur">
+    <span className="inline-flex items-center rounded-full border border-border bg-background/60 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-foreground">
       {children}
     </span>
   );
