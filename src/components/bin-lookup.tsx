@@ -173,10 +173,6 @@ export function BinLookup() {
             <span className="hidden sm:inline">{isLoading ? "Checking" : "Lookup"}</span>
           </Button>
         </div>
-        <p className="mt-3 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          Card numbers are never stored or shared
-        </p>
       </form>
 
 
