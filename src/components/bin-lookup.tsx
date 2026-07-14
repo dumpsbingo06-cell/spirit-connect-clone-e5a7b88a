@@ -284,25 +284,25 @@ function SchemeMark({ data, loading }: { data: BinResult | null; loading: boolea
 
 function CountryDisplay({ data, loading }: { data: BinResult | null; loading: boolean }) {
   if (loading) {
-    return <div className="h-14 w-40 animate-pulse rounded-xl bg-white/20" />;
+    return <div className="h-14 w-full animate-pulse rounded-xl bg-muted sm:w-40" />;
   }
   if (!data?.countryName) return null;
   const flagCode = /^[a-z]{2}$/i.test(data.countryCode ?? "") ? data.countryCode!.toLowerCase() : null;
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
+    <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-background/60 px-4 py-3 sm:w-auto">
       {flagCode ? (
         <span
           aria-label={`${data.countryName} flag`}
-          className={`fi fi-${flagCode} block h-8 w-12 rounded shadow-sm`}
+          className={`fi fi-${flagCode} block h-8 w-12 shrink-0 rounded shadow-sm`}
         />
       ) : (
         <span className="text-3xl leading-none">{data.countryEmoji ?? "🏳️"}</span>
       )}
-      <div>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-primary-foreground/70">
+      <div className="min-w-0">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
           Country
         </p>
-        <p className="font-display text-lg font-semibold uppercase tracking-wide text-primary-foreground">
+        <p className="font-display text-base font-semibold uppercase tracking-wide text-foreground sm:text-lg">
           {data.countryName}
         </p>
       </div>
@@ -312,7 +312,7 @@ function CountryDisplay({ data, loading }: { data: BinResult | null; loading: bo
 
 function Pill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary-foreground backdrop-blur">
+    <span className="inline-flex items-center rounded-full border border-border bg-background/60 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-foreground">
       {children}
     </span>
   );
