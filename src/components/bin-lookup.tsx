@@ -257,32 +257,11 @@ export function BinLookup() {
   );
 }
 
-function ResultsHeader({ data, isLoading }: { data: BinResult | null; isLoading: boolean }) {
+function ResultsHeader({ isLoading }: { isLoading: boolean }) {
   return (
-    <div className="flex items-center justify-between gap-3">
-      <div className="flex items-center gap-2">
-        <h2 className="font-display text-xl font-semibold text-foreground">Lookup results</h2>
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-      </div>
-      {data && (
-        <span
-          className={`inline-flex animate-scale-in items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-            data.source === "cache"
-              ? "border border-border bg-secondary text-secondary-foreground"
-              : "bg-gradient-accent text-primary-foreground shadow-sm"
-          }`}
-        >
-          {data.source === "cache" ? (
-            <>
-              <Database className="h-3.5 w-3.5" /> Cached
-            </>
-          ) : (
-            <>
-              <Zap className="h-3.5 w-3.5" /> Live
-            </>
-          )}
-        </span>
-      )}
+    <div className="flex items-center gap-3">
+      <h2 className="font-display text-xl font-semibold text-foreground">Lookup results</h2>
+      {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
     </div>
   );
 }
