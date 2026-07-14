@@ -1,9 +1,7 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
   Search,
   Loader2,
-  Database,
-  Zap,
   AlertCircle,
   SearchX,
   CreditCard,
@@ -17,7 +15,6 @@ import {
   Layers,
   Tag,
   ShieldCheck,
-  Lock,
 } from "lucide-react";
 
 import { lookupBin, type BinResult } from "@/lib/bin-lookup.api";
