@@ -203,32 +203,31 @@ export function BinLookup() {
 
       {/* Results */}
       {(isLoading || hasResult) && (
-        <section className="mx-auto mt-8 w-full max-w-5xl animate-fade-in">
-          <ResultsHeader data={data} isLoading={isLoading} />
+        <section ref={resultsRef} className="mx-auto mt-8 w-full max-w-5xl scroll-mt-24 animate-fade-in">
+          <ResultsHeader isLoading={isLoading} />
 
           {/* Hero summary card */}
-          <div className="mt-4 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card">
-            <div className="relative bg-gradient-hero p-6 sm:p-8">
-              <div className="absolute inset-0 opacity-20 mix-blend-overlay [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
-              <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-4">
+          <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-secondary text-foreground shadow-card">
+            <div className="relative p-5 sm:p-8">
+              <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-4">
                   <SchemeMark data={data} loading={isLoading} />
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/70">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
                       BIN
                     </p>
                     {isLoading ? (
-                      <div className="mt-1 h-8 w-40 animate-pulse rounded bg-white/20" />
+                      <div className="mt-1 h-8 w-40 animate-pulse rounded bg-muted" />
                     ) : (
-                      <p className="font-mono text-2xl font-bold tracking-widest text-primary-foreground sm:text-3xl">
+                      <p className="font-mono text-2xl font-bold tracking-widest text-foreground sm:text-3xl break-all">
                         {data?.bin}
                       </p>
                     )}
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       {isLoading ? (
                         <>
-                          <span className="h-5 w-16 animate-pulse rounded-full bg-white/20" />
-                          <span className="h-5 w-20 animate-pulse rounded-full bg-white/20" />
+                          <span className="h-5 w-16 animate-pulse rounded-full bg-muted" />
+                          <span className="h-5 w-20 animate-pulse rounded-full bg-muted" />
                         </>
                       ) : (
                         <>
