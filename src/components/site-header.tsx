@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
   return (
