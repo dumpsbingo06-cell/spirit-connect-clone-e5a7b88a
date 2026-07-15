@@ -41,7 +41,28 @@ export interface ContactMessage {
   email: string;
   message: string;
   read: boolean;
+  status: "open" | "closed";
+  ticket_token: string;
   created_at: string;
+  updated_at: string;
+}
+
+export interface TicketReply {
+  id: string;
+  body: string;
+  from_admin: boolean;
+  created_at: string;
+}
+
+export interface TicketThread {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  status: "open" | "closed";
+  created_at: string;
+  updated_at: string;
+  replies: TicketReply[];
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
