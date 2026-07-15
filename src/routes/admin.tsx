@@ -369,64 +369,214 @@ function AdminPage() {
             <p className="text-sm text-muted-foreground">No messages yet.</p>
           ) : (
             <ul className="space-y-3">
-              {messages.map((m) => {
-                const hasEmail = m.email && m.email !== "anonymous@binly.local";
-                const mailto = hasEmail
-                  ? `mailto:${m.email}?subject=${encodeURIComponent("Re: " + m.name)}&body=${encodeURIComponent(`\n\n---\nOn ${new Date(m.created_at).toLocaleString()} you wrote:\n${m.message}`)}`
-                  : null;
-                return (
-                  <li key={m.id} className="rounded-lg border border-border/60 bg-background p-3">
-                    <div className="mb-1 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                            m.category === "advertisement"
-                              ? "bg-primary/15 text-primary"
-                              : "bg-secondary text-secondary-foreground"
-                          }`}
-                        >
-                          {m.category}
-                        </span>
-                        <span className="text-sm font-semibold">{m.name}</span>
-                        {hasEmail ? (
-                          <a href={`mailto:${m.email}`} className="text-xs text-primary hover:underline">
-                            {m.email}
-                          </a>
-                        ) : (
-                          <span className="text-xs text-muted-foreground italic">no reply address</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <time className="text-[11px] text-muted-foreground">
-                          {new Date(m.created_at).toLocaleString()}
-                        </time>
-                        <button
-                          onClick={() => handleDeleteMessage(m.id)}
-                          className="text-muted-foreground hover:text-destructive"
-                          aria-label="Delete"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                    <p className="whitespace-pre-wrap text-sm text-foreground/90">{m.message}</p>
-                    {mailto && (
-                      <div className="mt-2">
-                        <a href={mailto}>
-                          <Button size="sm" variant="outline" className="gap-2">
-                            <Mail className="h-3.5 w-3.5" /> Reply via email
-                          </Button>
-                        </a>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
+              {messages.map((m) => (
+                <TicketItem
+                  key={m.id}
+                  message={m}
+                  onDelete={handleDeleteMessage}
+                  onStatusChange={(id, status) => {
+                    setMessages((prev) => prev.map((x) => (x.id === id ? { ...x, status } : x)));
+                  }}
+                />
+              ))}
             </ul>
-
           )}
         </section>
       </main>
+    </div>
+  );
+}
+
+function TicketItem({
+  message,
+  onDelete,
+  onStatusChange,
+}: {
+  message: ContactMessage;
+  onDelete: (id: string) => void;
+  onStatusChange: (id: string, status: "open" | "closed") => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [replies, setReplies] = useState<TicketReply[]>([]);
+  const [reply, setReply] = useState("");
+  const [sending, setSending] = useState(false);
+  const [statusBusy, setStatusBusy] = useState(false);
+
+  const hasEmail = message.email && message.email !== "anonymous@binly.local";
+  const status = message.status;
+
+  async function loadReplies() {
+    setLoading(true);
+    try {
+      const r = await listRepliesForMessage(message.id);
+      setReplies(r);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function toggle() {
+    const next = !open;
+    setOpen(next);
+    if (next && replies.length === 0) await loadReplies();
+  }
+
+  async function sendReply() {
+    if (!reply.trim()) return;
+    setSending(true);
+    try {
+      const r = await postAdminReply(message.id, reply);
+      setReplies((prev) => [...prev, r]);
+      setReply("");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to reply");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function toggleStatus() {
+    const next = status === "open" ? "closed" : "open";
+    setStatusBusy(true);
+    try {
+      await setTicketStatus(message.id, next);
+      onStatusChange(message.id, next);
+    } finally {
+      setStatusBusy(false);
+    }
+  }
+
+  return (
+    <li className="overflow-hidden rounded-lg border border-border/60 bg-background">
+      <button
+        onClick={toggle}
+        className="flex w-full items-start justify-between gap-3 p-3 text-left hover:bg-muted/30"
+      >
+        <div className="flex items-start gap-2">
+          {open ? <ChevronDown className="mt-0.5 h-4 w-4 text-muted-foreground" /> : <ChevronRight className="mt-0.5 h-4 w-4 text-muted-foreground" />}
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                  status === "open" ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {status}
+              </span>
+              <span className="text-sm font-semibold truncate">{message.name}</span>
+              {hasEmail ? (
+                <a
+                  href={`mailto:${message.email}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-xs text-primary hover:underline"
+                >
+                  {message.email}
+                </a>
+              ) : (
+                <span className="text-xs italic text-muted-foreground">no reply address</span>
+              )}
+            </div>
+            <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{message.message}</p>
+          </div>
+        </div>
+        <time className="whitespace-nowrap text-[11px] text-muted-foreground">
+          {new Date(message.updated_at).toLocaleString()}
+        </time>
+      </button>
+
+      {open && (
+        <div className="border-t border-border/60 p-3">
+          <div className="space-y-2">
+            <ThreadBubble side="user" label={message.name} time={message.created_at} body={message.message} />
+            {loading ? (
+              <div className="flex justify-center py-2">
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              replies.map((r) => (
+                <ThreadBubble
+                  key={r.id}
+                  side={r.from_admin ? "admin" : "user"}
+                  label={r.from_admin ? "You (admin)" : message.name}
+                  time={r.created_at}
+                  body={r.body}
+                />
+              ))
+            )}
+          </div>
+
+          {status === "open" ? (
+            <div className="mt-3 space-y-2">
+              <Textarea
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                rows={3}
+                maxLength={4000}
+                placeholder="Reply to this ticket…"
+              />
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" onClick={sendReply} disabled={sending || !reply.trim()} className="gap-2">
+                    {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Reply className="h-3.5 w-3.5" />}
+                    Send reply
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={toggleStatus} disabled={statusBusy} className="gap-2">
+                    {statusBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Lock className="h-3.5 w-3.5" />}
+                    Close ticket
+                  </Button>
+                </div>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => onDelete(message.id)}
+                  className="gap-2"
+                >
+                  <Trash2 className="h-3.5 w-3.5" /> Delete
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+              <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Lock className="h-3.5 w-3.5" /> Ticket closed
+              </span>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={toggleStatus} disabled={statusBusy} className="gap-2">
+                  {statusBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Unlock className="h-3.5 w-3.5" />}
+                  Reopen
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => onDelete(message.id)} className="gap-2">
+                  <Trash2 className="h-3.5 w-3.5" /> Delete
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
+
+function ThreadBubble({
+  side, label, time, body,
+}: { side: "admin" | "user"; label: string; time: string; body: string }) {
+  const isAdmin = side === "admin";
+  return (
+    <div className={`flex ${isAdmin ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`max-w-[85%] rounded-2xl border px-3 py-2 ${
+          isAdmin
+            ? "border-primary/30 bg-primary/10"
+            : "border-border bg-card"
+        }`}
+      >
+        <div className="mb-1 flex items-center gap-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+          <span className="font-semibold">{label}</span>
+          <time>{new Date(time).toLocaleString()}</time>
+        </div>
+        <p className="whitespace-pre-wrap text-sm">{body}</p>
+      </div>
     </div>
   );
 }
