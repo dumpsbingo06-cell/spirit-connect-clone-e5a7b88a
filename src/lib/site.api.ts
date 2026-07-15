@@ -41,7 +41,28 @@ export interface ContactMessage {
   email: string;
   message: string;
   read: boolean;
+  status: "open" | "closed";
+  ticket_token: string;
   created_at: string;
+  updated_at: string;
+}
+
+export interface TicketReply {
+  id: string;
+  body: string;
+  from_admin: boolean;
+  created_at: string;
+}
+
+export interface TicketThread {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  status: "open" | "closed";
+  created_at: string;
+  updated_at: string;
+  replies: TicketReply[];
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
@@ -84,35 +105,120 @@ export async function updateSiteSettings(input: SiteSettings): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
+export interface TicketHandle {
+  id: string;
+  token: string;
+}
+
+const TICKETS_STORAGE_KEY = "binly.tickets";
+
+export function rememberTicket(handle: TicketHandle & { subject?: string }) {
+  try {
+    const raw = localStorage.getItem(TICKETS_STORAGE_KEY);
+    const list: (TicketHandle & { subject?: string; savedAt: string })[] = raw ? JSON.parse(raw) : [];
+    if (!list.find((t) => t.id === handle.id)) {
+      list.unshift({ ...handle, savedAt: new Date().toISOString() });
+    }
+    localStorage.setItem(TICKETS_STORAGE_KEY, JSON.stringify(list.slice(0, 20)));
+  } catch {}
+}
+
+export function listRememberedTickets(): (TicketHandle & { subject?: string; savedAt: string })[] {
+  try {
+    const raw = localStorage.getItem(TICKETS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function submitContactMessage(input: {
   subject: string;
   message: string;
   email?: string;
-}): Promise<void> {
+}): Promise<TicketHandle> {
   const subject = String(input.subject ?? "").trim().slice(0, 100);
   const message = String(input.message ?? "").trim().slice(0, 2000);
   const email = String(input.email ?? "").trim().slice(0, 200);
   if (!subject) throw new Error("Subject is required");
   if (!message) throw new Error("Message is required");
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("contact_messages")
     .insert({
       category: "general",
       name: subject,
       email: email || "anonymous@binly.local",
       message,
-    });
-  if (error) throw new Error(error.message);
+    })
+    .select("id, ticket_token")
+    .single();
+  if (error || !data) throw new Error(error?.message ?? "Failed to send");
+  const handle = { id: data.id as string, token: data.ticket_token as string };
+  rememberTicket({ ...handle, subject });
+  return handle;
 }
 
 export async function listContactMessages(): Promise<ContactMessage[]> {
   const { data } = await supabase
     .from("contact_messages")
-    .select("id, category, name, email, message, read, created_at")
-    .order("created_at", { ascending: false });
+    .select("id, category, name, email, message, read, status, ticket_token, created_at, updated_at")
+    .order("updated_at", { ascending: false });
   return (data ?? []) as ContactMessage[];
 }
 
 export async function deleteContactMessage(id: string): Promise<void> {
   await supabase.from("contact_messages").delete().eq("id", id);
 }
+
+export async function setTicketStatus(id: string, status: "open" | "closed"): Promise<void> {
+  const { error } = await supabase
+    .from("contact_messages")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function listRepliesForMessage(messageId: string): Promise<TicketReply[]> {
+  const { data } = await supabase
+    .from("contact_replies")
+    .select("id, body, from_admin, created_at")
+    .eq("message_id", messageId)
+    .order("created_at", { ascending: true });
+  return (data ?? []) as TicketReply[];
+}
+
+export async function postAdminReply(messageId: string, body: string): Promise<TicketReply> {
+  const trimmed = body.trim().slice(0, 4000);
+  if (!trimmed) throw new Error("Reply cannot be empty");
+  const { data, error } = await supabase
+    .from("contact_replies")
+    .insert({ message_id: messageId, body: trimmed, from_admin: true })
+    .select("id, body, from_admin, created_at")
+    .single();
+  if (error || !data) throw new Error(error?.message ?? "Failed to reply");
+  await supabase
+    .from("contact_messages")
+    .update({ updated_at: new Date().toISOString(), read: true })
+    .eq("id", messageId);
+  return data as TicketReply;
+}
+
+export async function getTicketThread(id: string, token: string): Promise<TicketThread | null> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("get_ticket", { p_id: id, p_token: token });
+  if (error) throw new Error(error.message);
+  return (data ?? null) as TicketThread | null;
+}
+
+export async function postTicketReplyAsUser(id: string, token: string, body: string): Promise<void> {
+  const trimmed = body.trim().slice(0, 4000);
+  if (!trimmed) throw new Error("Reply cannot be empty");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).rpc("post_ticket_reply", {
+    p_id: id,
+    p_token: token,
+    p_body: trimmed,
+  });
+  if (error) throw new Error(error.message);
+}
+

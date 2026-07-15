@@ -128,6 +128,9 @@ export type Database = {
           message: string
           name: string
           read: boolean
+          status: string
+          ticket_token: string
+          updated_at: string
         }
         Insert: {
           category: string
@@ -137,6 +140,9 @@ export type Database = {
           message: string
           name: string
           read?: boolean
+          status?: string
+          ticket_token?: string
+          updated_at?: string
         }
         Update: {
           category?: string
@@ -146,8 +152,46 @@ export type Database = {
           message?: string
           name?: string
           read?: boolean
+          status?: string
+          ticket_token?: string
+          updated_at?: string
         }
         Relationships: []
+      }
+      contact_replies: {
+        Row: {
+          author_user_id: string | null
+          body: string
+          created_at: string
+          from_admin: boolean
+          id: string
+          message_id: string
+        }
+        Insert: {
+          author_user_id?: string | null
+          body: string
+          created_at?: string
+          from_admin?: boolean
+          id?: string
+          message_id: string
+        }
+        Update: {
+          author_user_id?: string | null
+          body?: string
+          created_at?: string
+          from_admin?: boolean
+          id?: string
+          message_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_replies_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "contact_messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_settings: {
         Row: {
@@ -215,12 +259,17 @@ export type Database = {
     }
     Functions: {
       claim_admin_if_empty: { Args: never; Returns: boolean }
+      get_ticket: { Args: { p_id: string; p_token: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      post_ticket_reply: {
+        Args: { p_body: string; p_id: string; p_token: string }
+        Returns: string
       }
     }
     Enums: {
