@@ -14,14 +14,22 @@ import {
   updateSiteSettings,
   listContactMessages,
   deleteContactMessage,
+  listRepliesForMessage,
+  postAdminReply,
+  setTicketStatus,
   HERO_FONT_OPTIONS,
   type SiteSettings,
   type ContactMessage,
+  type TicketReply,
 } from "@/lib/site.api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { LogOut, Save, Loader2, Trash2, Send, MessageCircle, Mail } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  LogOut, Save, Loader2, Trash2, Send, MessageCircle, Mail,
+  ChevronDown, ChevronRight, Lock, Unlock, Reply,
+} from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Banners" }] }),
