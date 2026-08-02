@@ -26,11 +26,18 @@ export function SiteHeader() {
             Lookup
           </Link>
           <Link
+            to="/forum"
+            className="rounded-md px-3 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:text-foreground"
+          >
+            Forum
+          </Link>
+          <Link
             to="/contact"
             className="rounded-md px-3 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:text-foreground"
           >
             Contact
           </Link>
+
           <div className="ml-1">
             <ThemeToggle />
           </div>
