@@ -382,7 +382,10 @@ function AdminPage() {
             </ul>
           )}
         </section>
+
+        <AdminAnalytics />
       </main>
+
     </div>
   );
 }
