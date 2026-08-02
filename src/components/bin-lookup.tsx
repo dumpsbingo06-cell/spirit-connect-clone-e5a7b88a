@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 import { lookupBin, type BinResult } from "@/lib/bin-lookup.api";
-import { getSiteSettings, type SiteSettings } from "@/lib/site.api";
+import { type SiteSettings } from "@/lib/site.api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BrandLogo, schemeLogoUrl } from "@/components/brand-logo";
