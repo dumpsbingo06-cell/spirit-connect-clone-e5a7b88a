@@ -4,8 +4,17 @@ import { AdBanner } from "@/components/ad-banner";
 import { BinLookup } from "@/components/bin-lookup";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { listBanners } from "@/lib/banners.api";
+import { getSiteSettings } from "@/lib/site.api";
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    const [banners, settings] = await Promise.all([
+      listBanners().catch(() => []),
+      getSiteSettings().catch(() => null),
+    ]);
+    return { banners, settings };
+  },
   head: () => ({
     scripts: [
       {
@@ -25,6 +34,7 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
 
 function Index() {
   return (
