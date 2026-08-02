@@ -37,6 +37,7 @@ export const Route = createFileRoute("/")({
 
 
 function Index() {
+  const { banners, settings } = Route.useLoaderData();
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <div
@@ -49,10 +50,11 @@ function Index() {
       />
       <div className="relative z-10 flex flex-1 flex-col">
         <SiteHeader />
-        <AdBanner />
+        <AdBanner banners={banners} />
         <main className="flex-1 py-10 sm:py-14">
-          <BinLookup />
+          <BinLookup hero={settings} />
         </main>
+
         <SiteFooter />
       </div>
     </div>
