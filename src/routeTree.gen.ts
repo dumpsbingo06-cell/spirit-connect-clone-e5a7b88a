@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TicketIdRouteImport } from './routes/ticket.$id'
+import { Route as ForumThreadIdRouteImport } from './routes/forum_.$threadId'
 
 const ForumRoute = ForumRouteImport.update({
   id: '/forum',
@@ -46,6 +47,11 @@ const TicketIdRoute = TicketIdRouteImport.update({
   path: '/ticket/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForumThreadIdRoute = ForumThreadIdRouteImport.update({
+  id: '/forum_/$threadId',
+  path: '/forum/$threadId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/forum_/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/auth' | '/contact' | '/forum' | '/ticket/$id'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/contact'
+    | '/forum'
+    | '/forum/$threadId'
+    | '/ticket/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/auth' | '/contact' | '/forum' | '/ticket/$id'
+  to:
+    | '/'
+    | '/admin'
+    | '/auth'
+    | '/contact'
+    | '/forum'
+    | '/forum/$threadId'
+    | '/ticket/$id'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/forum_/$threadId'
     | '/ticket/$id'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +117,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   ForumRoute: typeof ForumRoute
+  ForumThreadIdRoute: typeof ForumThreadIdRoute
   TicketIdRoute: typeof TicketIdRoute
 }
 
@@ -140,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forum_/$threadId': {
+      id: '/forum_/$threadId'
+      path: '/forum/$threadId'
+      fullPath: '/forum/$threadId'
+      preLoaderRoute: typeof ForumThreadIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -149,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   ForumRoute: ForumRoute,
+  ForumThreadIdRoute: ForumThreadIdRoute,
   TicketIdRoute: TicketIdRoute,
 }
 export const routeTree = rootRouteImport
