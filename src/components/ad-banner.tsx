@@ -14,7 +14,7 @@ export function AdBanner({ banners = [] }: { banners?: AdBannerRow[] }) {
 }
 
 
-function BannerTile({ banner, priority }: { banner: AdBanner; priority: boolean }) {
+function BannerTile({ banner, priority }: { banner: AdBannerRow; priority: boolean }) {
   const bg = banner.background_color ?? "#1f2937";
   const img = (
     <img
