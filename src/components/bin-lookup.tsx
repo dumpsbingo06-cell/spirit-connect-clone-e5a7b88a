@@ -58,32 +58,15 @@ const LOCATION_FIELDS: FieldDef[] = [
   { key: "currency", label: "Currency", icon: Coins },
 ];
 
-export function BinLookup() {
+type HeroSettings = Pick<
+  SiteSettings,
+  "hero_badge" | "hero_title" | "hero_highlight" | "hero_subtitle" | "hero_font"
+>;
+
+export function BinLookup({ hero = null }: { hero?: HeroSettings | null }) {
   const [bin, setBin] = useState("");
   const [view, setView] = useState<ViewState>({ status: "idle" });
-  const [hero, setHero] = useState<Pick<
-    SiteSettings,
-    "hero_badge" | "hero_title" | "hero_highlight" | "hero_subtitle" | "hero_font"
-  > | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    getSiteSettings()
-      .then((s) => {
-        if (cancelled) return;
-        setHero({
-          hero_badge: s.hero_badge,
-          hero_title: s.hero_title,
-          hero_highlight: s.hero_highlight,
-          hero_subtitle: s.hero_subtitle,
-          hero_font: s.hero_font,
-        });
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const resultsRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
