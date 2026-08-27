@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -19,6 +20,11 @@ import { Route as TicketIdRouteImport } from './routes/ticket.$id'
 import { Route as ForumThreadIdRouteImport } from './routes/forum_.$threadId'
 import { Route as BinListCountryRouteImport } from './routes/bin-list.$country'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForumRoute = ForumRouteImport.update({
   id: '/forum',
   path: '/forum',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
   '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
   '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
   '/forum_/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/sitemap.xml'
     | '/bin-list/$country'
     | '/forum/$threadId'
     | '/ticket/$id'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/sitemap.xml'
     | '/bin-list/$country'
     | '/forum/$threadId'
     | '/ticket/$id'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/sitemap.xml'
     | '/bin-list/$country'
     | '/forum_/$threadId'
     | '/ticket/$id'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   ForumRoute: typeof ForumRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BinListCountryRoute: typeof BinListCountryRoute
   ForumThreadIdRoute: typeof ForumThreadIdRoute
   TicketIdRoute: typeof TicketIdRoute
@@ -149,6 +162,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forum': {
       id: '/forum'
       path: '/forum'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   ForumRoute: ForumRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   BinListCountryRoute: BinListCountryRoute,
   ForumThreadIdRoute: ForumThreadIdRoute,
   TicketIdRoute: TicketIdRoute,
