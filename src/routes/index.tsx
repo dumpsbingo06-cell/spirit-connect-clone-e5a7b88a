@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { AdBanner } from "@/components/ad-banner";
 import { BinLookup } from "@/components/bin-lookup";
@@ -16,7 +16,26 @@ export const Route = createFileRoute("/")({
     return { banners, settings };
   },
   head: () => ({
+    meta: [
+      { title: "BIN Lookup & BIN Checker — Free BIN / IIN Search | Binly" },
+      {
+        name: "description",
+        content:
+          "Free BIN lookup and BIN checker. Enter the first 6 digits of any card to find the issuing bank, scheme, brand, card type, country and currency.",
+      },
+      { property: "og:title", content: "BIN Lookup & BIN Checker — Binly" },
+      {
+        property: "og:description",
+        content:
+          "Identify the issuing bank, scheme, brand, country and currency behind any card BIN in seconds.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://binly.xyz/" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://binly.xyz/" }],
     scripts: [
+
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -53,7 +72,15 @@ function Index() {
         <AdBanner banners={banners} />
         <main className="flex-1 py-10 sm:py-14">
           <BinLookup hero={settings} />
+          <p className="mx-auto mt-10 max-w-2xl px-4 text-center text-sm text-muted-foreground">
+            Prefer to browse?{" "}
+            <Link to="/bin-list" className="text-primary underline-offset-4 hover:underline">
+              View the full BIN list by country
+            </Link>
+            .
+          </p>
         </main>
+
 
         <SiteFooter />
       </div>

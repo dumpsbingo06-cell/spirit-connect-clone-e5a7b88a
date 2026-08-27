@@ -421,6 +421,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bin_countries: {
+        Args: never
+        Returns: {
+          bin_count: number
+          country_code: string
+          country_emoji: string
+          country_name: string
+        }[]
+      }
+      bins_by_country: {
+        Args: { p_country_code: string; p_limit?: number }
+        Returns: {
+          bank_name: string
+          bin: string
+          brand: string
+          card_type: string
+          category: string
+          country_code: string
+          country_emoji: string
+          country_name: string
+          currency: string
+          scheme: string
+        }[]
+      }
       claim_admin_if_empty: { Args: never; Returns: boolean }
       get_ticket: { Args: { p_id: string; p_token: string }; Returns: Json }
       has_role: {

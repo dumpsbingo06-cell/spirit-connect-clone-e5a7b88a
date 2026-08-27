@@ -9,14 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BinListIndexRouteImport } from './routes/bin-list.index'
 import { Route as TicketIdRouteImport } from './routes/ticket.$id'
 import { Route as ForumThreadIdRouteImport } from './routes/forum_.$threadId'
+import { Route as BinListCountryRouteImport } from './routes/bin-list.$country'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForumRoute = ForumRouteImport.update({
   id: '/forum',
   path: '/forum',
@@ -42,6 +50,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BinListIndexRoute = BinListIndexRouteImport.update({
+  id: '/bin-list/',
+  path: '/bin-list/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TicketIdRoute = TicketIdRouteImport.update({
   id: '/ticket/$id',
   path: '/ticket/$id',
@@ -52,6 +65,11 @@ const ForumThreadIdRoute = ForumThreadIdRouteImport.update({
   path: '/forum/$threadId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BinListCountryRoute = BinListCountryRouteImport.update({
+  id: '/bin-list/$country',
+  path: '/bin-list/$country',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,8 +77,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/bin-list/$country': typeof BinListCountryRoute
   '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
+  '/bin-list/': typeof BinListIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,8 +89,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/bin-list/$country': typeof BinListCountryRoute
   '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
+  '/bin-list': typeof BinListIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,8 +102,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/bin-list/$country': typeof BinListCountryRoute
   '/forum_/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
+  '/bin-list/': typeof BinListIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -89,8 +116,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/sitemap.xml'
+    | '/bin-list/$country'
     | '/forum/$threadId'
     | '/ticket/$id'
+    | '/bin-list/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,8 +128,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/sitemap.xml'
+    | '/bin-list/$country'
     | '/forum/$threadId'
     | '/ticket/$id'
+    | '/bin-list'
   id:
     | '__root__'
     | '/'
@@ -107,8 +140,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/sitemap.xml'
+    | '/bin-list/$country'
     | '/forum_/$threadId'
     | '/ticket/$id'
+    | '/bin-list/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,12 +153,22 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   ForumRoute: typeof ForumRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BinListCountryRoute: typeof BinListCountryRoute
   ForumThreadIdRoute: typeof ForumThreadIdRoute
   TicketIdRoute: typeof TicketIdRoute
+  BinListIndexRoute: typeof BinListIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forum': {
       id: '/forum'
       path: '/forum'
@@ -158,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bin-list/': {
+      id: '/bin-list/'
+      path: '/bin-list'
+      fullPath: '/bin-list/'
+      preLoaderRoute: typeof BinListIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ticket/$id': {
       id: '/ticket/$id'
       path: '/ticket/$id'
@@ -172,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForumThreadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bin-list/$country': {
+      id: '/bin-list/$country'
+      path: '/bin-list/$country'
+      fullPath: '/bin-list/$country'
+      preLoaderRoute: typeof BinListCountryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -181,8 +241,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   ForumRoute: ForumRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BinListCountryRoute: BinListCountryRoute,
   ForumThreadIdRoute: ForumThreadIdRoute,
   TicketIdRoute: TicketIdRoute,
+  BinListIndexRoute: BinListIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
