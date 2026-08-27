@@ -91,9 +91,9 @@ function CountryBinList() {
         </div>
 
         <p className="mt-3 max-w-2xl text-muted-foreground">
-          {bins.length} bank identification numbers (BIN / IIN) issued in {country.country_name}
-          {country.currency_note ?? ""}. Each row shows the card scheme, brand, card type and the
-          issuing bank. Use the{" "}
+          {bins.length} bank identification numbers (BIN / IIN) issued in {country.country_name}.
+          Each row shows the card scheme, brand, card type and the issuing bank. Use the{" "}
+
           <Link to="/" className="text-primary underline-offset-4 hover:underline">
             BIN lookup tool
           </Link>{" "}
