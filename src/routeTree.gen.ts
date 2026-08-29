@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as Google84daecdce0f066deDothtmlRouteImport } from './routes/google84daecdce0f066de[.]html'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -25,6 +26,12 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Google84daecdce0f066deDothtmlRoute =
+  Google84daecdce0f066deDothtmlRouteImport.update({
+    id: '/google84daecdce0f066de.html',
+    path: '/google84daecdce0f066de.html',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ForumRoute = ForumRouteImport.update({
   id: '/forum',
   path: '/forum',
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
   '/forum/$threadId': typeof ForumThreadIdRoute
@@ -89,6 +97,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
   '/forum/$threadId': typeof ForumThreadIdRoute
@@ -102,6 +111,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/forum': typeof ForumRoute
+  '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
   '/forum_/$threadId': typeof ForumThreadIdRoute
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
     | '/forum/$threadId'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
     | '/forum/$threadId'
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/forum'
+    | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
     | '/forum_/$threadId'
@@ -153,6 +166,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   ForumRoute: typeof ForumRoute
+  Google84daecdce0f066deDothtmlRoute: typeof Google84daecdce0f066deDothtmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BinListCountryRoute: typeof BinListCountryRoute
   ForumThreadIdRoute: typeof ForumThreadIdRoute
@@ -167,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/google84daecdce0f066de.html': {
+      id: '/google84daecdce0f066de.html'
+      path: '/google84daecdce0f066de.html'
+      fullPath: '/google84daecdce0f066de.html'
+      preLoaderRoute: typeof Google84daecdce0f066deDothtmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forum': {
@@ -241,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   ForumRoute: ForumRoute,
+  Google84daecdce0f066deDothtmlRoute: Google84daecdce0f066deDothtmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BinListCountryRoute: BinListCountryRoute,
   ForumThreadIdRoute: ForumThreadIdRoute,
