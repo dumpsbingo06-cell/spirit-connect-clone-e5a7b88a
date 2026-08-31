@@ -11,14 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Google84daecdce0f066deDothtmlRouteImport } from './routes/google84daecdce0f066de[.]html'
-import { Route as ForumRouteImport } from './routes/forum'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BinListIndexRouteImport } from './routes/bin-list.index'
 import { Route as TicketIdRouteImport } from './routes/ticket.$id'
-import { Route as ForumThreadIdRouteImport } from './routes/forum_.$threadId'
 import { Route as BinListCountryRouteImport } from './routes/bin-list.$country'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -32,11 +30,6 @@ const Google84daecdce0f066deDothtmlRoute =
     path: '/google84daecdce0f066de.html',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ForumRoute = ForumRouteImport.update({
-  id: '/forum',
-  path: '/forum',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -67,11 +60,6 @@ const TicketIdRoute = TicketIdRouteImport.update({
   path: '/ticket/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForumThreadIdRoute = ForumThreadIdRouteImport.update({
-  id: '/forum_/$threadId',
-  path: '/forum/$threadId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BinListCountryRoute = BinListCountryRouteImport.update({
   id: '/bin-list/$country',
   path: '/bin-list/$country',
@@ -83,11 +71,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
-  '/forum': typeof ForumRoute
   '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
-  '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list/': typeof BinListIndexRoute
 }
@@ -96,11 +82,9 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
-  '/forum': typeof ForumRoute
   '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
-  '/forum/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list': typeof BinListIndexRoute
 }
@@ -110,11 +94,9 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
-  '/forum': typeof ForumRoute
   '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
-  '/forum_/$threadId': typeof ForumThreadIdRoute
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list/': typeof BinListIndexRoute
 }
@@ -125,11 +107,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/contact'
-    | '/forum'
     | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
-    | '/forum/$threadId'
     | '/ticket/$id'
     | '/bin-list/'
   fileRoutesByTo: FileRoutesByTo
@@ -138,11 +118,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/contact'
-    | '/forum'
     | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
-    | '/forum/$threadId'
     | '/ticket/$id'
     | '/bin-list'
   id:
@@ -151,11 +129,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/contact'
-    | '/forum'
     | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
-    | '/forum_/$threadId'
     | '/ticket/$id'
     | '/bin-list/'
   fileRoutesById: FileRoutesById
@@ -165,11 +141,9 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
-  ForumRoute: typeof ForumRoute
   Google84daecdce0f066deDothtmlRoute: typeof Google84daecdce0f066deDothtmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BinListCountryRoute: typeof BinListCountryRoute
-  ForumThreadIdRoute: typeof ForumThreadIdRoute
   TicketIdRoute: typeof TicketIdRoute
   BinListIndexRoute: typeof BinListIndexRoute
 }
@@ -188,13 +162,6 @@ declare module '@tanstack/react-router' {
       path: '/google84daecdce0f066de.html'
       fullPath: '/google84daecdce0f066de.html'
       preLoaderRoute: typeof Google84daecdce0f066deDothtmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forum': {
-      id: '/forum'
-      path: '/forum'
-      fullPath: '/forum'
-      preLoaderRoute: typeof ForumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -239,13 +206,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forum_/$threadId': {
-      id: '/forum_/$threadId'
-      path: '/forum/$threadId'
-      fullPath: '/forum/$threadId'
-      preLoaderRoute: typeof ForumThreadIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/bin-list/$country': {
       id: '/bin-list/$country'
       path: '/bin-list/$country'
@@ -261,11 +221,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
-  ForumRoute: ForumRoute,
   Google84daecdce0f066deDothtmlRoute: Google84daecdce0f066deDothtmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BinListCountryRoute: BinListCountryRoute,
-  ForumThreadIdRoute: ForumThreadIdRoute,
   TicketIdRoute: TicketIdRoute,
   BinListIndexRoute: BinListIndexRoute,
 }
