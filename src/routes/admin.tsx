@@ -169,13 +169,23 @@ function AdminPage() {
     );
   }
 
+  const TABS = [
+    { id: "analytics", label: "Analytics" },
+    { id: "banners", label: "Banners" },
+    { id: "homepage", label: "Homepage" },
+    { id: "links", label: "Footer links" },
+    { id: "messages", label: `Messages (${messages.length})` },
+  ] as const;
+  type TabId = (typeof TABS)[number]["id"];
+  const [tab, setTab] = useState<TabId>("analytics");
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60 bg-card">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <div>
-            <h1 className="font-display text-xl font-semibold">Banner Admin</h1>
-            <p className="text-sm text-muted-foreground">Edit the top ad slots shown on the homepage.</p>
+            <h1 className="font-display text-xl font-semibold">Admin Panel</h1>
+            <p className="text-sm text-muted-foreground">Manage your site, ads and messages.</p>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">View site</Link>
@@ -188,9 +198,28 @@ function AdminPage() {
             </Button>
           </div>
         </div>
+        <nav className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4 pb-px">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={`whitespace-nowrap rounded-t-md border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+                tab === t.id
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6">
+        {tab === "analytics" && <AdminAnalytics />}
+
+        {tab === "banners" && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {banners.map((b) => (
             <div key={b.slot} className="rounded-xl border border-border bg-card p-4 shadow-card">
