@@ -286,9 +286,11 @@ function AdminPage() {
             </div>
           ))}
         </div>
+        )}
 
         {/* Homepage hero — editable content + font */}
-        <section className="mt-8 rounded-xl border border-border bg-card p-4 shadow-card">
+        {tab === "homepage" && (
+        <section className="rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-1 font-display text-lg font-semibold">Homepage hero</h2>
           <p className="mb-4 text-xs text-muted-foreground">
             Edit the text shown at the top of the homepage. Choose a font that matches your brand.
@@ -363,9 +365,11 @@ function AdminPage() {
             </Button>
           </div>
         </section>
+        )}
 
         {/* Site settings — social links */}
-        <section className="mt-8 rounded-xl border border-border bg-card p-4 shadow-card">
+        {tab === "links" && (
+        <section className="rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-1 font-display text-lg font-semibold">Footer links</h2>
           <p className="mb-4 text-xs text-muted-foreground">Direct links shown in the site footer.</p>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
