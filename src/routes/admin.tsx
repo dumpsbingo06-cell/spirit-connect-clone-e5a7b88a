@@ -396,9 +396,11 @@ function AdminPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* Contact messages */}
-        <section className="mt-6 rounded-xl border border-border bg-card p-4 shadow-card">
+        {tab === "messages" && (
+        <section className="rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-4 font-display text-lg font-semibold">Contact messages ({messages.length})</h2>
           {messages.length === 0 ? (
             <p className="text-sm text-muted-foreground">No messages yet.</p>
@@ -417,8 +419,7 @@ function AdminPage() {
             </ul>
           )}
         </section>
-
-        <AdminAnalytics />
+        )}
       </main>
 
     </div>
