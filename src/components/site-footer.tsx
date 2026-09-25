@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { getSiteSettings, type SiteSettings } from "@/lib/site.api";
+import { openTelegramPopup } from "@/components/telegram-popup";
 
 
 export function SiteFooter() {
@@ -28,16 +29,15 @@ export function SiteFooter() {
         </div>
         <div className="flex items-center gap-2 sm:justify-end">
           {s.telegram_url && (
-            <a
-              href={s.telegram_url}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={openTelegramPopup}
               aria-label="Telegram"
               title="Telegram"
               className={iconCls}
             >
               <Send className="h-4 w-4" />
-            </a>
+            </button>
           )}
           {s.jabber_url && (
             <a

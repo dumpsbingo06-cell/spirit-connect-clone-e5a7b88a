@@ -57,6 +57,7 @@ function AdminPage() {
   });
   const [savingSettings, setSavingSettings] = useState(false);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [tab, setTab] = useState<"analytics" | "banners" | "homepage" | "links" | "messages">("analytics");
 
   useEffect(() => {
     let cancelled = false;
@@ -169,13 +170,22 @@ function AdminPage() {
     );
   }
 
+  const TABS = [
+    { id: "analytics", label: "Analytics" },
+    { id: "banners", label: "Banners" },
+    { id: "homepage", label: "Homepage" },
+    { id: "links", label: "Footer links" },
+    { id: "messages", label: `Messages (${messages.length})` },
+  ] as const;
+  type TabId = (typeof TABS)[number]["id"];
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60 bg-card">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <div>
-            <h1 className="font-display text-xl font-semibold">Banner Admin</h1>
-            <p className="text-sm text-muted-foreground">Edit the top ad slots shown on the homepage.</p>
+            <h1 className="font-display text-xl font-semibold">Admin Panel</h1>
+            <p className="text-sm text-muted-foreground">Manage your site, ads and messages.</p>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">View site</Link>
@@ -188,9 +198,28 @@ function AdminPage() {
             </Button>
           </div>
         </div>
+        <nav className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4 pb-px">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={`whitespace-nowrap rounded-t-md border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+                tab === t.id
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6">
+        {tab === "analytics" && <AdminAnalytics />}
+
+        {tab === "banners" && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {banners.map((b) => (
             <div key={b.slot} className="rounded-xl border border-border bg-card p-4 shadow-card">
@@ -257,9 +286,11 @@ function AdminPage() {
             </div>
           ))}
         </div>
+        )}
 
         {/* Homepage hero — editable content + font */}
-        <section className="mt-8 rounded-xl border border-border bg-card p-4 shadow-card">
+        {tab === "homepage" && (
+        <section className="rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-1 font-display text-lg font-semibold">Homepage hero</h2>
           <p className="mb-4 text-xs text-muted-foreground">
             Edit the text shown at the top of the homepage. Choose a font that matches your brand.
@@ -334,9 +365,11 @@ function AdminPage() {
             </Button>
           </div>
         </section>
+        )}
 
         {/* Site settings — social links */}
-        <section className="mt-8 rounded-xl border border-border bg-card p-4 shadow-card">
+        {tab === "links" && (
+        <section className="rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-1 font-display text-lg font-semibold">Footer links</h2>
           <p className="mb-4 text-xs text-muted-foreground">Direct links shown in the site footer.</p>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -363,9 +396,11 @@ function AdminPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* Contact messages */}
-        <section className="mt-6 rounded-xl border border-border bg-card p-4 shadow-card">
+        {tab === "messages" && (
+        <section className="rounded-xl border border-border bg-card p-4 shadow-card">
           <h2 className="mb-4 font-display text-lg font-semibold">Contact messages ({messages.length})</h2>
           {messages.length === 0 ? (
             <p className="text-sm text-muted-foreground">No messages yet.</p>
@@ -384,8 +419,7 @@ function AdminPage() {
             </ul>
           )}
         </section>
-
-        <AdminAnalytics />
+        )}
       </main>
 
     </div>

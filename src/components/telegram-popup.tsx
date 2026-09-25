@@ -1,29 +1,39 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Send, X } from "lucide-react";
 import { getSiteSettings } from "@/lib/site.api";
 
 const DISMISS_KEY = "binly.telegram_popup_dismissed";
+export const TELEGRAM_POPUP_EVENT = "binly:open-telegram-popup";
+
+export function openTelegramPopup() {
+  window.dispatchEvent(new Event(TELEGRAM_POPUP_EVENT));
+}
 
 export function TelegramPopup() {
   const [telegramUrl, setTelegramUrl] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem(DISMISS_KEY)) return;
     getSiteSettings()
       .then((s) => {
         if (s.telegram_url) {
           setTelegramUrl(s.telegram_url);
-          setOpen(true);
+          if (!sessionStorage.getItem(DISMISS_KEY)) setOpen(true);
         }
       })
       .catch(() => {});
   }, []);
 
-  const dismiss = () => {
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener(TELEGRAM_POPUP_EVENT, handler);
+    return () => window.removeEventListener(TELEGRAM_POPUP_EVENT, handler);
+  }, []);
+
+  const dismiss = useCallback(() => {
     sessionStorage.setItem(DISMISS_KEY, "1");
     setOpen(false);
-  };
+  }, []);
 
   if (!open || !telegramUrl) return null;
 
