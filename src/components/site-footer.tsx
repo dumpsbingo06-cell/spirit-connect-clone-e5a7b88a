@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { getSiteSettings, type SiteSettings } from "@/lib/site.api";
+import { openTelegramPopup } from "@/components/telegram-popup";
 
 
 export function SiteFooter() {
