@@ -57,6 +57,7 @@ function AdminPage() {
   });
   const [savingSettings, setSavingSettings] = useState(false);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [tab, setTab] = useState<"analytics" | "banners" | "homepage" | "links" | "messages">("analytics");
 
   useEffect(() => {
     let cancelled = false;
@@ -177,7 +178,6 @@ function AdminPage() {
     { id: "messages", label: `Messages (${messages.length})` },
   ] as const;
   type TabId = (typeof TABS)[number]["id"];
-  const [tab, setTab] = useState<TabId>("analytics");
 
   return (
     <div className="min-h-screen bg-background">
