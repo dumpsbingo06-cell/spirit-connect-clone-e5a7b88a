@@ -105,25 +105,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       const supabaseOrigin = import.meta.env.VITE_SUPABASE_URL
         ? new URL(import.meta.env.VITE_SUPABASE_URL).origin
         : null;
-      return [
+      const links: { rel: string; href: string; crossOrigin?: string }[] = [
         {
           rel: "stylesheet",
           href: appCss,
         },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-        ...(supabaseOrigin
-          ? [
-              { rel: "preconnect", href: supabaseOrigin, crossOrigin: "anonymous" },
-              { rel: "dns-prefetch", href: supabaseOrigin },
-            ]
-          : []),
-      ] as { rel: string; href: string; crossOrigin?: string }[];
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=DM+Serif+Display&family=Poppins:wght@500;600;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Bebas+Neue&display=swap",
+        },
+      ];
+      if (supabaseOrigin) {
+        links.push(
+          { rel: "preconnect", href: supabaseOrigin, crossOrigin: "anonymous" },
+          { rel: "dns-prefetch", href: supabaseOrigin },
+        );
+      }
+      return links;
     })(),
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=DM+Serif+Display&family=Poppins:wght@500;600;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Bebas+Neue&display=swap",
-      },
       { rel: "icon", type: "image/png", href: "/binly-icon.png" },
       { rel: "apple-touch-icon", href: "/binly-icon.png" },
     ],
