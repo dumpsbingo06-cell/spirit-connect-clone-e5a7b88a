@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       const supabaseOrigin = import.meta.env.VITE_SUPABASE_URL
         ? new URL(import.meta.env.VITE_SUPABASE_URL).origin
         : null;
-      const links: { rel: string; href: string; crossOrigin?: string }[] = [
+      const links: { rel: string; href: string; crossOrigin?: "anonymous" | "use-credentials" }[] = [
         {
           rel: "stylesheet",
           href: appCss,
