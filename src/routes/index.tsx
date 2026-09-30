@@ -75,6 +75,7 @@ function Index() {
         <AdBanner banners={banners} />
         <main className="flex-1 py-10 sm:py-14">
           <BinLookup hero={settings} />
+          <PopularBins bins={popular} />
           <p className="mx-auto mt-10 max-w-2xl px-4 text-center text-sm text-muted-foreground">
             Prefer to browse?{" "}
             <Link to="/bin-list" className="text-primary underline-offset-4 hover:underline">
