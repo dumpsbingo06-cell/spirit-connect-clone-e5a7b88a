@@ -1,20 +1,40 @@
+import { useMemo } from "react";
 import type { AdBanner as AdBannerRow } from "@/lib/banners.api";
+import { useStaggeredRotation } from "@/components/popular-bins";
 
 export function AdBanner({ banners = [] }: { banners?: AdBannerRow[] }) {
-  const visible = banners.filter((x) => x.active && x.image_url);
+  const visible = useMemo(() => banners.filter((x) => x.active && x.image_url), [banners]);
+  // Gentle visual rotation: tiles keep their DOM position (GIFs never restart),
+  // only their display order shifts over time.
+  const offset = useStaggeredRotation(visible.length);
   if (visible.length === 0) return null;
 
   return (
-    <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-2 px-3 py-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mx-auto flex w-full max-w-6xl flex-wrap gap-2 px-3 py-3">
       {visible.map((b, i) => (
-        <BannerTile key={b.id} banner={b} priority={i < 3} />
+        <BannerTile
+          key={b.id}
+          banner={b}
+          priority={i < 3}
+          order={(i + offset) % visible.length}
+          total={visible.length}
+        />
       ))}
     </div>
   );
 }
 
-
-function BannerTile({ banner, priority }: { banner: AdBannerRow; priority: boolean }) {
+function BannerTile({
+  banner,
+  priority,
+  order,
+  total,
+}: {
+  banner: AdBannerRow;
+  priority: boolean;
+  order: number;
+  total: number;
+}) {
   const bg = banner.background_color ?? "#1f2937";
   const img = (
     <img
@@ -34,12 +54,20 @@ function BannerTile({ banner, priority }: { banner: AdBannerRow; priority: boole
       {img}
     </div>
   );
+  const tile = (
+    <div
+      className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
+      style={{ order }}
+    >
+      {inner}
+    </div>
+  );
   if (banner.link_url) {
     return (
-      <a href={banner.link_url} target="_blank" rel="noopener noreferrer sponsored" className="block">
-        {inner}
+      <a href={banner.link_url} target="_blank" rel="noopener noreferrer sponsored" className="block" style={{ order }}>
+        <div className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]">{inner}</div>
       </a>
     );
   }
-  return inner;
+  return tile;
 }
