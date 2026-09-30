@@ -3,23 +3,41 @@ import { Send, X } from "lucide-react";
 import { getSiteSettings } from "@/lib/site.api";
 
 const DISMISS_KEY = "binly.telegram_popup_dismissed";
+const URL_CACHE_KEY = "binly.telegram_url";
 export const TELEGRAM_POPUP_EVENT = "binly:open-telegram-popup";
 
 export function openTelegramPopup() {
   window.dispatchEvent(new Event(TELEGRAM_POPUP_EVENT));
 }
 
+function readCachedUrl(): string {
+  try {
+    return localStorage.getItem(URL_CACHE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export function TelegramPopup() {
-  const [telegramUrl, setTelegramUrl] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
+  // Open instantly from the cached URL — no network wait on repeat visits.
+  const [telegramUrl, setTelegramUrl] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    if (sessionStorage.getItem(DISMISS_KEY)) return null;
+    const cached = readCachedUrl();
+    return cached || null;
+  });
+  const [open, setOpen] = useState(() => telegramUrl !== null);
 
   useEffect(() => {
+    // Refresh the URL in the background; open once it arrives on first visit.
     getSiteSettings()
       .then((s) => {
-        if (s.telegram_url) {
-          setTelegramUrl(s.telegram_url);
-          if (!sessionStorage.getItem(DISMISS_KEY)) setOpen(true);
-        }
+        if (!s.telegram_url) return;
+        try {
+          localStorage.setItem(URL_CACHE_KEY, s.telegram_url);
+        } catch {}
+        setTelegramUrl(s.telegram_url);
+        if (!sessionStorage.getItem(DISMISS_KEY)) setOpen(true);
       })
       .catch(() => {});
   }, []);
