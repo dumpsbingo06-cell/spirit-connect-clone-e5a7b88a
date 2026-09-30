@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import type { AdBanner as AdBannerRow } from "@/lib/banners.api";
 import { useStaggeredRotation } from "@/components/popular-bins";
 
+const TILE_WIDTH = "w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]";
+
 export function AdBanner({ banners = [] }: { banners?: AdBannerRow[] }) {
   const visible = useMemo(() => banners.filter((x) => x.active && x.image_url), [banners]);
   // Gentle visual rotation: tiles keep their DOM position (GIFs never restart),
@@ -17,24 +19,13 @@ export function AdBanner({ banners = [] }: { banners?: AdBannerRow[] }) {
           banner={b}
           priority={i < 3}
           order={(i + offset) % visible.length}
-          total={visible.length}
         />
       ))}
     </div>
   );
 }
 
-function BannerTile({
-  banner,
-  priority,
-  order,
-  total,
-}: {
-  banner: AdBannerRow;
-  priority: boolean;
-  order: number;
-  total: number;
-}) {
+function BannerTile({ banner, priority, order }: { banner: AdBannerRow; priority: boolean; order: number }) {
   const bg = banner.background_color ?? "#1f2937";
   const img = (
     <img
@@ -54,20 +45,22 @@ function BannerTile({
       {img}
     </div>
   );
-  const tile = (
-    <div
-      className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
-      style={{ order }}
-    >
-      {inner}
-    </div>
-  );
   if (banner.link_url) {
     return (
-      <a href={banner.link_url} target="_blank" rel="noopener noreferrer sponsored" className="block" style={{ order }}>
-        <div className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]">{inner}</div>
+      <a
+        href={banner.link_url}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        className={`block ${TILE_WIDTH}`}
+        style={{ order }}
+      >
+        {inner}
       </a>
     );
   }
-  return tile;
+  return (
+    <div className={TILE_WIDTH} style={{ order }}>
+      {inner}
+    </div>
+  );
 }
