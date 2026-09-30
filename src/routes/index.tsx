@@ -2,18 +2,21 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { AdBanner } from "@/components/ad-banner";
 import { BinLookup } from "@/components/bin-lookup";
+import { PopularBins } from "@/components/popular-bins";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { listBanners } from "@/lib/banners.api";
+import { listPopularBins } from "@/lib/bin-directory.api";
 import { getSiteSettings } from "@/lib/site.api";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [banners, settings] = await Promise.all([
+    const [banners, settings, popular] = await Promise.all([
       listBanners().catch(() => []),
       getSiteSettings().catch(() => null),
+      listPopularBins().catch(() => []),
     ]);
-    return { banners, settings };
+    return { banners, settings, popular };
   },
   head: () => ({
     meta: [
@@ -56,7 +59,7 @@ export const Route = createFileRoute("/")({
 
 
 function Index() {
-  const { banners, settings } = Route.useLoaderData();
+  const { banners, settings, popular } = Route.useLoaderData();
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <div
@@ -72,6 +75,7 @@ function Index() {
         <AdBanner banners={banners} />
         <main className="flex-1 py-10 sm:py-14">
           <BinLookup hero={settings} />
+          <PopularBins bins={popular} />
           <p className="mx-auto mt-10 max-w-2xl px-4 text-center text-sm text-muted-foreground">
             Prefer to browse?{" "}
             <Link to="/bin-list" className="text-primary underline-offset-4 hover:underline">

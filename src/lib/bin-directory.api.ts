@@ -45,6 +45,27 @@ export async function findCountryBySlug(slug: string): Promise<BinCountry | null
   );
 }
 
+export interface PopularBin {
+  bin: string;
+  scheme: string | null;
+  brand: string | null;
+  card_type: string | null;
+  category: string | null;
+  bank_name: string | null;
+  country_code: string | null;
+  country_name: string | null;
+  country_emoji: string | null;
+  currency: string | null;
+  lookups: number;
+}
+
+export async function listPopularBins(limit = 12): Promise<PopularBin[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("popular_bins", { p_limit: limit });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as PopularBin[];
+}
+
 export async function listBinsByCountry(countryCode: string, limit = 500): Promise<DirectoryBin[]> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (supabase as any).rpc("bins_by_country", {
