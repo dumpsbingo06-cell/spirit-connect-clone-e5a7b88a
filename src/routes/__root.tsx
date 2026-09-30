@@ -116,6 +116,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=DM+Serif+Display&family=Poppins:wght@500;600;700&family=Manrope:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Bebas+Neue&display=swap",
         },
+        { rel: "icon", type: "image/png", href: "/binly-icon.png" },
+        { rel: "apple-touch-icon", href: "/binly-icon.png" },
       ];
       if (supabaseOrigin) {
         links.push(
