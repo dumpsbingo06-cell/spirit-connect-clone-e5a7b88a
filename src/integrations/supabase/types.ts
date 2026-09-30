@@ -458,6 +458,22 @@ export type Database = {
         Args: { p_thread_id: string }
         Returns: undefined
       }
+      popular_bins: {
+        Args: { p_limit?: number }
+        Returns: {
+          bank_name: string
+          bin: string
+          brand: string
+          card_type: string
+          category: string
+          country_code: string
+          country_emoji: string
+          country_name: string
+          currency: string
+          lookups: number
+          scheme: string
+        }[]
+      }
       post_ticket_reply: {
         Args: { p_body: string; p_id: string; p_token: string }
         Returns: string
