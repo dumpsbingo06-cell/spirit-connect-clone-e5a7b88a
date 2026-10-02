@@ -15,8 +15,10 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BinsIndexRouteImport } from './routes/bins.index'
 import { Route as BinListIndexRouteImport } from './routes/bin-list.index'
 import { Route as TicketIdRouteImport } from './routes/ticket.$id'
+import { Route as BinsSlugRouteImport } from './routes/bins.$slug'
 import { Route as BinListCountryRouteImport } from './routes/bin-list.$country'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -50,6 +52,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BinsIndexRoute = BinsIndexRouteImport.update({
+  id: '/bins/',
+  path: '/bins/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BinListIndexRoute = BinListIndexRouteImport.update({
   id: '/bin-list/',
   path: '/bin-list/',
@@ -58,6 +65,11 @@ const BinListIndexRoute = BinListIndexRouteImport.update({
 const TicketIdRoute = TicketIdRouteImport.update({
   id: '/ticket/$id',
   path: '/ticket/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BinsSlugRoute = BinsSlugRouteImport.update({
+  id: '/bins/$slug',
+  path: '/bins/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BinListCountryRoute = BinListCountryRouteImport.update({
@@ -74,8 +86,10 @@ export interface FileRoutesByFullPath {
   '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
+  '/bins/$slug': typeof BinsSlugRoute
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list/': typeof BinListIndexRoute
+  '/bins/': typeof BinsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,8 +99,10 @@ export interface FileRoutesByTo {
   '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
+  '/bins/$slug': typeof BinsSlugRoute
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list': typeof BinListIndexRoute
+  '/bins': typeof BinsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,8 +113,10 @@ export interface FileRoutesById {
   '/google84daecdce0f066de.html': typeof Google84daecdce0f066deDothtmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bin-list/$country': typeof BinListCountryRoute
+  '/bins/$slug': typeof BinsSlugRoute
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list/': typeof BinListIndexRoute
+  '/bins/': typeof BinsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,8 +128,10 @@ export interface FileRouteTypes {
     | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
+    | '/bins/$slug'
     | '/ticket/$id'
     | '/bin-list/'
+    | '/bins/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -121,8 +141,10 @@ export interface FileRouteTypes {
     | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
+    | '/bins/$slug'
     | '/ticket/$id'
     | '/bin-list'
+    | '/bins'
   id:
     | '__root__'
     | '/'
@@ -132,8 +154,10 @@ export interface FileRouteTypes {
     | '/google84daecdce0f066de.html'
     | '/sitemap.xml'
     | '/bin-list/$country'
+    | '/bins/$slug'
     | '/ticket/$id'
     | '/bin-list/'
+    | '/bins/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -144,8 +168,10 @@ export interface RootRouteChildren {
   Google84daecdce0f066deDothtmlRoute: typeof Google84daecdce0f066deDothtmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BinListCountryRoute: typeof BinListCountryRoute
+  BinsSlugRoute: typeof BinsSlugRoute
   TicketIdRoute: typeof TicketIdRoute
   BinListIndexRoute: typeof BinListIndexRoute
+  BinsIndexRoute: typeof BinsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bins/': {
+      id: '/bins/'
+      path: '/bins'
+      fullPath: '/bins/'
+      preLoaderRoute: typeof BinsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bin-list/': {
       id: '/bin-list/'
       path: '/bin-list'
@@ -204,6 +237,13 @@ declare module '@tanstack/react-router' {
       path: '/ticket/$id'
       fullPath: '/ticket/$id'
       preLoaderRoute: typeof TicketIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bins/$slug': {
+      id: '/bins/$slug'
+      path: '/bins/$slug'
+      fullPath: '/bins/$slug'
+      preLoaderRoute: typeof BinsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bin-list/$country': {
@@ -224,8 +264,10 @@ const rootRouteChildren: RootRouteChildren = {
   Google84daecdce0f066deDothtmlRoute: Google84daecdce0f066deDothtmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BinListCountryRoute: BinListCountryRoute,
+  BinsSlugRoute: BinsSlugRoute,
   TicketIdRoute: TicketIdRoute,
   BinListIndexRoute: BinListIndexRoute,
+  BinsIndexRoute: BinsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
