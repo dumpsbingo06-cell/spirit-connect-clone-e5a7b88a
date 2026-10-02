@@ -119,6 +119,65 @@ export type Database = {
         }
         Relationships: []
       }
+      bin_categories: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      category_bins: {
+        Row: {
+          bin: string
+          category_id: string
+          created_at: string
+          id: string
+          note: string
+        }
+        Insert: {
+          bin: string
+          category_id: string
+          created_at?: string
+          id?: string
+          note?: string
+        }
+        Update: {
+          bin?: string
+          category_id?: string
+          created_at?: string
+          id?: string
+          note?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_bins_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "bin_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           category: string
