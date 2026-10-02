@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
 import { listBinCountries, countrySlug } from "@/lib/bin-directory.api";
+import { listCategories } from "@/lib/bin-categories.api";
 
 const BASE_URL = "https://binly.xyz";
 
@@ -29,6 +30,9 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.8",
           });
         }
+        entries.push({ path: "/bins", changefreq: "daily", priority: "0.8" });
+        const cats = await listCategories().catch(() => []);
+        for (const c of cats) entries.push({ path: `/bins/${c.slug}`, changefreq: "weekly", priority: "0.7" });
 
         const urls = entries.map((e) =>
           [

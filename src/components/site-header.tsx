@@ -31,6 +31,12 @@ export function SiteHeader() {
           >
             BIN List
           </Link>
+          <Link
+            to="/bins"
+            className="rounded-md px-3 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:text-foreground"
+          >
+            Categories
+          </Link>
 
           <Link
             to="/contact"
