@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminAnalytics } from "@/components/admin-analytics";
+import { AdminCategories } from "@/components/admin-categories";
 
 import {
   listAllBanners,
@@ -57,7 +58,7 @@ function AdminPage() {
   });
   const [savingSettings, setSavingSettings] = useState(false);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [tab, setTab] = useState<"analytics" | "banners" | "homepage" | "links" | "messages">("analytics");
+  const [tab, setTab] = useState<"analytics" | "categories" | "banners" | "homepage" | "links" | "messages">("analytics");
 
   useEffect(() => {
     let cancelled = false;
@@ -172,6 +173,7 @@ function AdminPage() {
 
   const TABS = [
     { id: "analytics", label: "Analytics" },
+    { id: "categories", label: "BIN Categories" },
     { id: "banners", label: "Banners" },
     { id: "homepage", label: "Homepage" },
     { id: "links", label: "Footer links" },
@@ -218,6 +220,7 @@ function AdminPage() {
 
       <main className="mx-auto max-w-5xl px-4 py-6">
         {tab === "analytics" && <AdminAnalytics />}
+        {tab === "categories" && <AdminCategories />}
 
         {tab === "banners" && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
