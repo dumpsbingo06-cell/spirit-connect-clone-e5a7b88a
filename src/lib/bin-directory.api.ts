@@ -57,6 +57,8 @@ export interface PopularBin {
   country_emoji: string | null;
   currency: string | null;
   lookups: number;
+  category_slug: string;
+  category_name: string;
 }
 
 export async function listPopularBins(limit = 12): Promise<PopularBin[]> {

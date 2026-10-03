@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
-import { TrendingUp, ChevronRight } from "lucide-react";
+import { TrendingUp, ChevronRight, FolderOpen } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { type PopularBin } from "@/lib/bin-directory.api";
 import { BrandLogo } from "@/components/brand-logo";
-import { countrySlug } from "@/lib/bin-directory.api";
-
-const SCHEME_CLASS: Record<string, string> = {
-  visa: "text-[#1a1f71]",
-  mastercard: "text-[#eb001b]",
-  amex: "text-[#006fcf]",
-};
 
 export function PopularBins({ bins }: { bins: PopularBin[] }) {
   if (bins.length === 0) return null;
@@ -24,13 +17,17 @@ export function PopularBins({ bins }: { bins: PopularBin[] }) {
       </div>
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
         {bins.map((b) => {
-          const slug = b.country_name ? countrySlug(b.country_name) : null;
-          const schemeKey = (b.scheme ?? "").toLowerCase();
-          const inner = (
-            <div className="group flex h-full items-center gap-3 rounded-lg border border-border/70 bg-card/70 px-3 py-2.5 shadow-sm backdrop-blur transition-colors hover:border-primary/40 hover:bg-accent/40">
+          return (
+            <li key={`${b.category_slug}-${b.bin}`}>
+              <Link
+                to="/bins/$slug"
+                params={{ slug: b.category_slug }}
+                className="group flex h-full items-center gap-3 rounded-lg border border-border/70 bg-card/70 px-3 py-3 shadow-sm backdrop-blur transition-colors hover:border-primary/40 hover:bg-accent/40"
+                aria-label={`View ${b.bin} in ${b.category_name}`}
+              >
               <BrandLogo
                 name={b.scheme}
-                className="h-6 w-9 shrink-0 rounded-sm border border-border bg-white object-contain p-0.5"
+                className="h-7 w-10 shrink-0 rounded-sm border border-border bg-card object-contain p-0.5"
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -39,30 +36,19 @@ export function PopularBins({ bins }: { bins: PopularBin[] }) {
                   </span>
                   {b.country_emoji ? <span aria-hidden>{b.country_emoji}</span> : null}
                 </div>
-                <div
-                  className={`truncate text-xs text-muted-foreground ${
-                    SCHEME_CLASS[schemeKey] ? `font-medium ${SCHEME_CLASS[schemeKey]}` : ""
-                  }`}
-                  title={b.bank_name ?? b.scheme ?? undefined}
-                >
-                  {b.bank_name ?? b.scheme ?? "Unknown issuer"}
+                <div className="truncate text-xs text-muted-foreground" title={b.bank_name ?? undefined}>
+                  {b.bank_name ?? "Details pending"}
+                </div>
+                <div className="mt-1 flex items-center gap-1 truncate text-[11px] font-medium text-foreground">
+                  <FolderOpen className="h-3 w-3 shrink-0 text-primary" aria-hidden />
+                  <span className="truncate">{b.category_name}</span>
                 </div>
               </div>
               <ChevronRight
                 className="h-4 w-4 shrink-0 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
                 aria-hidden
               />
-            </div>
-          );
-          return (
-            <li key={b.bin}>
-              {slug ? (
-                <Link to="/bin-list/$country" params={{ country: slug }} className="block h-full">
-                  {inner}
-                </Link>
-              ) : (
-                inner
-              )}
+              </Link>
             </li>
           );
         })}
