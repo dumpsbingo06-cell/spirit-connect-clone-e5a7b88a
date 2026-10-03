@@ -504,6 +504,26 @@ export type Database = {
           scheme: string
         }[]
       }
+      category_bin_details: {
+        Args: { p_category_id: string; p_limit?: number }
+        Returns: {
+          bank_name: string
+          bin: string
+          brand: string
+          card_level: string
+          card_type: string
+          commercial: boolean
+          country_code: string
+          country_emoji: string
+          country_name: string
+          created_at: string
+          currency: string
+          id: string
+          note: string
+          prepaid: boolean
+          scheme: string
+        }[]
+      }
       claim_admin_if_empty: { Args: never; Returns: boolean }
       get_ticket: { Args: { p_id: string; p_token: string }; Returns: Json }
       has_role: {
@@ -525,6 +545,8 @@ export type Database = {
           brand: string
           card_type: string
           category: string
+          category_name: string
+          category_slug: string
           country_code: string
           country_emoji: string
           country_name: string
