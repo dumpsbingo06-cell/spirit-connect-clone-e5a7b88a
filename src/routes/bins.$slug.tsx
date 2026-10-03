@@ -124,13 +124,14 @@ function BinFact({
   value: string | null;
   wide?: boolean;
 }) {
+  const displayValue = value && value.trim().toLowerCase() !== "unknown" ? value : "Details pending";
   return (
     <div className={wide ? "col-span-2 sm:col-span-1" : "min-w-0"}>
       <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
         <Icon className="h-3.5 w-3.5" aria-hidden /> {label}
       </dt>
-      <dd className="mt-1 truncate text-sm font-semibold text-foreground" title={value ?? undefined}>
-        {value || "Details pending"}
+      <dd className="mt-1 truncate text-sm font-semibold text-foreground" title={displayValue}>
+        {displayValue}
       </dd>
     </div>
   );
