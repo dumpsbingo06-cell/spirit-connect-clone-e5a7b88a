@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Public category pages read enriched BIN data only through the narrow `category_bin_details` database function, because `bin_cache` must remain private.

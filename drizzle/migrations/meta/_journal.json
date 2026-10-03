@@ -22,6 +22,13 @@
       "when": 1790920243322,
       "tag": "0002_popular_bins_from_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791011867795,
+      "tag": "0003_link_popular_bins_and_expose_category_details",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,17 @@ export interface CategoryBin {
   bin: string;
   note: string;
   created_at: string;
+  scheme: string | null;
+  brand: string | null;
+  card_type: string | null;
+  card_level: string | null;
+  bank_name: string | null;
+  country_code: string | null;
+  country_name: string | null;
+  country_emoji: string | null;
+  currency: string | null;
+  prepaid: boolean | null;
+  commercial: boolean | null;
 }
 
 export function slugify(name: string): string {
@@ -46,12 +57,11 @@ export async function getCategoryBySlug(slug: string) {
 }
 
 export async function listCategoryBins(categoryId: string): Promise<CategoryBin[]> {
-  const { data, error } = await supabase
-    .from("category_bins")
-    .select("id, bin, note, created_at")
-    .eq("category_id", categoryId)
-    .order("created_at", { ascending: false })
-    .limit(2000);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("category_bin_details", {
+    p_category_id: categoryId,
+    p_limit: 2000,
+  });
   if (error) throw new Error(error.message);
   return (data ?? []) as CategoryBin[];
 }
