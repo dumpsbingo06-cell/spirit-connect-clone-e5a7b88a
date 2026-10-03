@@ -1,5 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { Building2, CreditCard, Globe2, Layers3, WalletCards } from "lucide-react";
 
+import { BrandLogo } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getCategoryBySlug, listCategoryBins } from "@/lib/bin-categories.api";
@@ -48,32 +50,88 @@ function CategoryPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12">
-        <Link to="/bins" className="text-sm text-muted-foreground hover:text-foreground">← All categories</Link>
-        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">{category.name}</h1>
-        {category.description && <p className="mt-3 max-w-2xl text-muted-foreground">{category.description}</p>}
-        <p className="mt-2 text-sm text-muted-foreground">{bins.length} BINs</p>
-        {bins.length === 0 ? (
-          <p className="mt-8 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">No BINs added yet.</p>
-        ) : (
-          <div className="mt-6 overflow-hidden rounded-xl border border-border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <tr><th className="px-4 py-3">BIN</th><th className="px-4 py-3">Note</th></tr>
-              </thead>
-              <tbody className="divide-y divide-border bg-card">
-                {bins.map((b) => (
-                  <tr key={b.id}>
-                    <td className="px-4 py-2.5 font-mono font-semibold">{b.bin}</td>
-                    <td className="px-4 py-2.5 text-muted-foreground">{b.note || "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 sm:py-14">
+        <Link to="/bins" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          ← All categories
+        </Link>
+        <div className="mt-5 border-b border-border pb-7">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-muted-foreground">
+                <Layers3 className="h-4 w-4 text-primary" aria-hidden /> Curated BIN category
+              </p>
+              <h1 className="font-display text-3xl font-bold sm:text-4xl">{category.name}</h1>
+              {category.description && <p className="mt-3 max-w-2xl text-muted-foreground">{category.description}</p>}
+            </div>
+            <div className="rounded-md border border-border bg-muted px-4 py-3 text-right">
+              <div className="text-2xl font-bold text-foreground">{bins.length}</div>
+              <div className="text-xs font-medium text-muted-foreground">BIN{bins.length === 1 ? "" : "s"}</div>
+            </div>
           </div>
+        </div>
+        {bins.length === 0 ? (
+          <p className="mt-8 rounded-md border border-border bg-card p-6 text-sm text-muted-foreground">No BINs added yet.</p>
+        ) : (
+          <ul className="mt-6 grid gap-3">
+            {bins.map((b) => (
+              <li key={b.id} className="rounded-md border border-border bg-card p-4 shadow-sm sm:p-5">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
+                  <div className="flex min-w-0 items-center gap-3 lg:w-64">
+                    <BrandLogo name={b.scheme} className="h-9 w-14 shrink-0 rounded-sm border border-border bg-card object-contain p-1" />
+                    <div className="min-w-0">
+                      <div className="font-mono text-lg font-bold text-foreground">{b.bin}</div>
+                      <div className="truncate text-sm text-muted-foreground">{b.scheme || "Details pending"}</div>
+                    </div>
+                  </div>
+
+                  <dl className="grid min-w-0 flex-1 grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
+                    <BinFact icon={WalletCards} label="Brand" value={b.brand} />
+                    <BinFact icon={CreditCard} label="Type" value={b.card_type} />
+                    <BinFact icon={Layers3} label="Level" value={b.card_level} />
+                    <BinFact icon={Building2} label="Bank" value={b.bank_name} wide />
+                    <BinFact
+                      icon={Globe2}
+                      label="Country"
+                      value={[b.country_emoji, b.country_name].filter(Boolean).join(" ") || null}
+                    />
+                  </dl>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3 text-xs">
+                  {b.currency && <span className="rounded bg-muted px-2 py-1 font-medium text-foreground">{b.currency}</span>}
+                  {b.prepaid !== null && <span className="rounded bg-muted px-2 py-1 text-muted-foreground">{b.prepaid ? "Prepaid" : "Not prepaid"}</span>}
+                  {b.commercial !== null && <span className="rounded bg-muted px-2 py-1 text-muted-foreground">{b.commercial ? "Commercial" : "Consumer"}</span>}
+                  {b.note && <p className="w-full text-sm text-muted-foreground sm:ml-auto sm:w-auto">Note: {b.note}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+function BinFact({
+  icon: Icon,
+  label,
+  value,
+  wide = false,
+}: {
+  icon: typeof CreditCard;
+  label: string;
+  value: string | null;
+  wide?: boolean;
+}) {
+  return (
+    <div className={wide ? "col-span-2 sm:col-span-1" : "min-w-0"}>
+      <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        <Icon className="h-3.5 w-3.5" aria-hidden /> {label}
+      </dt>
+      <dd className="mt-1 truncate text-sm font-semibold text-foreground" title={value ?? undefined}>
+        {value || "Details pending"}
+      </dd>
     </div>
   );
 }
