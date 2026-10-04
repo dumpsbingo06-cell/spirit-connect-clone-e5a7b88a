@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader2, Plus, Trash2, Upload, ExternalLink } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Trash2, Upload, ExternalLink } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import {
   type BinCategory,
   type CategoryBin,
 } from "@/lib/bin-categories.api";
+import { lookupBin } from "@/lib/bin-lookup.api";
 
 export function AdminCategories() {
   const [cats, setCats] = useState<BinCategory[]>([]);
@@ -140,7 +141,32 @@ export function AdminCategories() {
               </Button>
             </div>
 
-            <h4 className="mt-6 text-sm font-semibold">BINs in this category ({bins.length})</h4>
+            <div className="mt-6 flex items-center justify-between gap-2">
+              <h4 className="text-sm font-semibold">BINs in this category ({bins.length})</h4>
+              <Button
+                variant="outline" size="sm"
+                disabled={busy || bins.length === 0}
+                onClick={async () => {
+                  setBusy(true); setMsg(null); setProgress(null);
+                  try {
+                    let done = 0;
+                    for (let i = 0; i < bins.length; i += 4) {
+                      await Promise.all(
+                        bins.slice(i, i + 4).map(async (b) => {
+                          await lookupBin({ bin: b.bin }).catch(() => null);
+                          done += 1; setProgress({ done, total: bins.length });
+                        }),
+                      );
+                    }
+                    setBins(await listCategoryBins(current.id));
+                  } catch (e) { setMsg((e as Error).message); }
+                  setBusy(false); setProgress(null);
+                }}
+              >
+                {busy && progress ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-1 h-4 w-4" />}
+                {busy && progress ? `Fetching ${progress.done}/${progress.total}…` : "Refresh details"}
+              </Button>
+            </div>
             <ul className="mt-2 max-h-96 divide-y divide-border overflow-auto rounded-lg border border-border">
               {bins.map((b) => (
                 <li key={b.id} className="flex items-center gap-3 px-3 py-2 text-sm">
