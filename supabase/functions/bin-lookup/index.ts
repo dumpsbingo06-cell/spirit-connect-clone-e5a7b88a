@@ -331,8 +331,12 @@ async function lookup(rawBin: string): Promise<Outcome> {
     }
   }
   if (primary) {
-    const enriched = await enrichAndCache(primary, primaryRaw);
-    return { status: "success", data: enriched };
+    // Save the card details right away; slower bank-contact enrichment runs in the background.
+    await saveToCache(primary, primaryRaw);
+    if (primary.bankName && !hasBankContact(primary)) {
+      backgroundTask(enrichAndCache(primary, primaryRaw));
+    }
+    return { status: "success", data: primary };
   }
   if (!anyReached) return { status: "error", message: "Could not reach any BIN provider. Please try again." };
   return { status: "not_found" };

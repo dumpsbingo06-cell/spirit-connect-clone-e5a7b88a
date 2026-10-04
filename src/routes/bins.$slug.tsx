@@ -5,12 +5,19 @@ import { BrandLogo } from "@/components/brand-logo";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getCategoryBySlug, listCategoryBins } from "@/lib/bin-categories.api";
+import { lookupBin } from "@/lib/bin-lookup.api";
 
 export const Route = createFileRoute("/bins/$slug")({
   loader: async ({ params }) => {
     const category = await getCategoryBySlug(params.slug);
     if (!category) throw notFound();
-    const bins = await listCategoryBins(category.id);
+    let bins = await listCategoryBins(category.id);
+    // Any BIN without details yet gets looked up now, so visitors never see "Details pending".
+    const missing = bins.filter((b) => !b.scheme && !b.bank_name).slice(0, 40);
+    if (missing.length > 0) {
+      await Promise.all(missing.map((b) => lookupBin({ bin: b.bin }).catch(() => null)));
+      bins = await listCategoryBins(category.id);
+    }
     return { category, bins };
   },
   head: ({ loaderData }) => {
