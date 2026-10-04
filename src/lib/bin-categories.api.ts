@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { lookupBin } from "@/lib/bin-lookup.api";
 
 export interface BinCategory {
   id: string;
@@ -96,12 +97,29 @@ export function parseBinList(text: string) {
   return rows;
 }
 
-export async function addBinsToCategory(categoryId: string, text: string) {
+export async function addBinsToCategory(
+  categoryId: string,
+  text: string,
+  onProgress?: (done: number, total: number) => void,
+) {
   const rows = parseBinList(text);
   if (rows.length === 0) throw new Error("No valid BINs found (need 6–8 digits per line)");
   const { error } = await supabase
     .from("category_bins")
     .upsert(rows.map((r) => ({ ...r, category_id: categoryId })), { onConflict: "category_id,bin" });
   if (error) throw new Error(error.message);
+
+  // Look up each BIN right away so the public page shows full details instead of "Details pending".
+  let done = 0;
+  const CONCURRENCY = 4;
+  for (let i = 0; i < rows.length; i += CONCURRENCY) {
+    await Promise.all(
+      rows.slice(i, i + CONCURRENCY).map(async (r) => {
+        await lookupBin({ bin: r.bin }).catch(() => null);
+        done += 1;
+        onProgress?.(done, rows.length);
+      }),
+    );
+  }
   return rows.length;
 }
