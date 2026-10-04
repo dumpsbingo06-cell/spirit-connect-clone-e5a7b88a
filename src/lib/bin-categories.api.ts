@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { lookupBin } from "@/lib/bin-lookup.api";
 
 export interface BinCategory {
   id: string;
