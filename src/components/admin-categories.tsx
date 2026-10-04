@@ -27,6 +27,7 @@ export function AdminCategories() {
   const [bins, setBins] = useState<CategoryBin[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
 
   async function refresh() {
     setLoading(true);
@@ -124,17 +125,18 @@ export function AdminCategories() {
                 size="sm"
                 disabled={busy || parsedCount === 0}
                 onClick={async () => {
-                  setBusy(true); setMsg(null);
+                  setBusy(true); setMsg(null); setProgress(null);
                   try {
-                    const n = await addBinsToCategory(current.id, paste);
+                    const n = await addBinsToCategory(current.id, paste, (done, total) => setProgress({ done, total }));
                     setPaste(""); setMsg(null);
                     setBins(await listCategoryBins(current.id)); refresh();
-                    alert(`Uploaded ${n} BINs`);
+                    alert(`Uploaded ${n} BINs with full details`);
                   } catch (e) { setMsg((e as Error).message); }
-                  setBusy(false);
+                  setBusy(false); setProgress(null);
                 }}
               >
-                {busy ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />} Upload
+                {busy ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />}
+                {busy && progress ? `Fetching details ${progress.done}/${progress.total}…` : "Upload"}
               </Button>
             </div>
 
