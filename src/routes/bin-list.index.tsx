@@ -46,21 +46,14 @@ function BinListIndex() {
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12">
-        <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
           BIN List by Country
         </h1>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Browse bank identification numbers (BIN / IIN) grouped by issuing country. Each page lists
-          the card scheme, brand, card type and issuing bank behind every BIN in our database.
-        </p>
+        <p className="mt-3 text-sm text-muted-foreground">{countries.length} countries</p>
 
         {countries.length === 0 ? (
           <p className="mt-10 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
-            Our country directory is still being built as cards are looked up.{" "}
-            <Link to="/" className="text-primary underline-offset-4 hover:underline">
-              Run a BIN lookup
-            </Link>{" "}
-            to add the first entries.
+            No countries available yet.
           </p>
         ) : (
           <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -69,7 +62,7 @@ function BinListIndex() {
                 <Link
                   to="/bin-list/$country"
                   params={{ country: countrySlug(c.country_name) }}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/50"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {/^[a-z]{2}$/i.test(c.country_code) ? (
                     <span
@@ -83,7 +76,7 @@ function BinListIndex() {
                     <span className="block truncate text-sm font-semibold text-foreground">
                       {c.country_name}
                     </span>
-                    <span className="text-xs text-muted-foreground">{c.bin_count} BINs</span>
+                    <span className="text-xs text-muted-foreground">{c.bin_count} {c.bin_count === 1 ? "BIN" : "BINs"}</span>
                   </span>
                 </Link>
               </li>
