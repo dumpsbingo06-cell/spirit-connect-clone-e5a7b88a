@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Public category pages read enriched BIN data only through the narrow `category_bin_details` database function, because `bin_cache` must remain private.
+- Public directory cleanup stays in route presentation and preserves the existing narrow read APIs, so visual changes do not widen access to card data.

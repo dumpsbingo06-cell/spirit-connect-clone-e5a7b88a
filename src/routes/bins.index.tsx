@@ -27,7 +27,7 @@ export const Route = createFileRoute("/bins/")({
 
 function BinsIndex() {
   const { categories } = Route.useLoaderData();
-  const totalBins = categories.reduce((total, category) => total + category.bin_count, 0);
+  const totalBins = categories.reduce((total, category) => total + (category.bin_count ?? 0), 0);
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
