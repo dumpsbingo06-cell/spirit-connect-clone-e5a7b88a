@@ -9,21 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as Google84daecdce0f066deDothtmlRouteImport } from './routes/google84daecdce0f066de[.]html'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BinsIndexRouteImport } from './routes/bins.index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as Google84daecdce0f066deDothtmlRouteImport } from './routes/google84daecdce0f066de[.]html'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BinListIndexRouteImport } from './routes/bin-list.index'
-import { Route as TicketIdRouteImport } from './routes/ticket.$id'
-import { Route as BinsSlugRouteImport } from './routes/bins.$slug'
 import { Route as BinListCountryRouteImport } from './routes/bin-list.$country'
+import { Route as BinsIndexRouteImport } from './routes/bins.index'
+import { Route as BinsSlugRouteImport } from './routes/bins.$slug'
+import { Route as TicketIdRouteImport } from './routes/ticket.$id'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Google84daecdce0f066deDothtmlRoute =
@@ -32,29 +47,9 @@ const Google84daecdce0f066deDothtmlRoute =
     path: '/google84daecdce0f066de.html',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BinsIndexRoute = BinsIndexRouteImport.update({
-  id: '/bins/',
-  path: '/bins/',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BinListIndexRoute = BinListIndexRouteImport.update({
@@ -62,9 +57,14 @@ const BinListIndexRoute = BinListIndexRouteImport.update({
   path: '/bin-list/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TicketIdRoute = TicketIdRouteImport.update({
-  id: '/ticket/$id',
-  path: '/ticket/$id',
+const BinListCountryRoute = BinListCountryRouteImport.update({
+  id: '/bin-list/$country',
+  path: '/bin-list/$country',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BinsIndexRoute = BinsIndexRouteImport.update({
+  id: '/bins/',
+  path: '/bins/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BinsSlugRoute = BinsSlugRouteImport.update({
@@ -72,9 +72,9 @@ const BinsSlugRoute = BinsSlugRouteImport.update({
   path: '/bins/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BinListCountryRoute = BinListCountryRouteImport.update({
-  id: '/bin-list/$country',
-  path: '/bin-list/$country',
+const TicketIdRoute = TicketIdRouteImport.update({
+  id: '/ticket/$id',
+  path: '/ticket/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -176,32 +176,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/google84daecdce0f066de.html': {
-      id: '/google84daecdce0f066de.html'
-      path: '/google84daecdce0f066de.html'
-      fullPath: '/google84daecdce0f066de.html'
-      preLoaderRoute: typeof Google84daecdce0f066deDothtmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -211,18 +190,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bins/': {
-      id: '/bins/'
-      path: '/bins'
-      fullPath: '/bins/'
-      preLoaderRoute: typeof BinsIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/google84daecdce0f066de.html': {
+      id: '/google84daecdce0f066de.html'
+      path: '/google84daecdce0f066de.html'
+      fullPath: '/google84daecdce0f066de.html'
+      preLoaderRoute: typeof Google84daecdce0f066deDothtmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bin-list/': {
@@ -232,11 +225,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BinListIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ticket/$id': {
-      id: '/ticket/$id'
-      path: '/ticket/$id'
-      fullPath: '/ticket/$id'
-      preLoaderRoute: typeof TicketIdRouteImport
+    '/bin-list/$country': {
+      id: '/bin-list/$country'
+      path: '/bin-list/$country'
+      fullPath: '/bin-list/$country'
+      preLoaderRoute: typeof BinListCountryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bins/': {
+      id: '/bins/'
+      path: '/bins'
+      fullPath: '/bins/'
+      preLoaderRoute: typeof BinsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bins/$slug': {
@@ -246,11 +246,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BinsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bin-list/$country': {
-      id: '/bin-list/$country'
-      path: '/bin-list/$country'
-      fullPath: '/bin-list/$country'
-      preLoaderRoute: typeof BinListCountryRouteImport
+    '/ticket/$id': {
+      id: '/ticket/$id'
+      path: '/ticket/$id'
+      fullPath: '/ticket/$id'
+      preLoaderRoute: typeof TicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
