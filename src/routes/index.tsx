@@ -33,10 +33,10 @@ export const Route = createFileRoute("/")({
           "Identify the issuing bank, scheme, brand, country and currency behind any card BIN in seconds.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://binly.xyz/" },
+      { property: "og:url", content: "https://www.binly.xyz/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://binly.xyz/" }],
+    links: [{ rel: "canonical", href: "https://www.binly.xyz/" }],
     scripts: [
 
       {
