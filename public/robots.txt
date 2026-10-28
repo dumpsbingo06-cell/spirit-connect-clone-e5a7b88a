@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://binly.xyz/sitemap.xml
+Sitemap: https://www.binly.xyz/sitemap.xml
