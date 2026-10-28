@@ -4,7 +4,7 @@ import type {} from "@tanstack/react-start";
 import { listBinCountries, countrySlug } from "@/lib/bin-directory.api";
 import { listCategories } from "@/lib/bin-categories.api";
 
-const BASE_URL = "https://binly.xyz";
+const BASE_URL = "https://www.binly.xyz";
 
 interface SitemapEntry {
   path: string;

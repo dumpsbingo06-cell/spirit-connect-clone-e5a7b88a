@@ -5,9 +5,10 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { listCategories } from "@/lib/bin-categories.api";
 
-const TITLE = "BIN Categories — Binly";
-const DESCRIPTION = "Browse curated BIN lists by category, hand-picked and organized by the Binly community.";
-const URL = "https://binly.xyz/bins";
+const TITLE = "BIN Categories — Curated Card BIN Collections | Binly";
+const DESCRIPTION =
+  "Browse curated BIN collections — Walmart BINs, Gummy Bear BINs and more. Every BIN shows its issuing bank, scheme, brand, card type and country, checked free with the Binly BIN lookup.";
+const URL = "https://www.binly.xyz/bins";
 
 export const Route = createFileRoute("/bins/")({
   loader: async () => ({ categories: await listCategories().catch(() => []) }),
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/bins/")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: URL },
       { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: URL }],
@@ -43,6 +45,17 @@ function BinsIndex() {
             <div><dt className="text-xs text-muted-foreground">BIN entries</dt><dd className="mt-1 font-display text-2xl font-semibold tabular-nums">{totalBins.toLocaleString()}</dd></div>
           </dl>
         </div>
+
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          These collections are hand-picked by the Binly community — groups of BINs that share something in common, like the store
+          they work at, the bank that issued them, or the type of card. Open a collection to see every BIN with its full card
+          details, or browse the{" "}
+          <Link to="/bin-list" className="text-primary underline-offset-4 hover:underline">
+            complete BIN list by country
+          </Link>
+          .
+        </p>
+
         <div className="mt-8 flex items-center justify-between">
           <h2 className="text-sm font-medium">All collections</h2>
           <ArrowDownRight className="h-5 w-5 text-muted-foreground" aria-hidden />
@@ -69,6 +82,24 @@ function BinsIndex() {
             ))}
           </ul>
         )}
+
+        <section className="mt-14 border-t border-border pt-8">
+          <h2 className="font-display text-xl font-semibold">What are BIN categories?</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            A BIN (Bank Identification Number) is the first 6 to 8 digits of a payment card, and it identifies who issued the card.
+            Collections group BINs that belong together — for example, BINs known to work at a particular store, BINs from one bank,
+            or BINs of one card type like prepaid or business cards. Risk teams, developers and shoppers use them to spot what kind
+            of card they are dealing with before accepting or using it.
+          </p>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            Every entry in a collection shows its issuing bank, card scheme, brand, card type, level, country and currency. You can
+            verify any of them instantly with the free{" "}
+            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+              Binly BIN checker
+            </Link>
+            .
+          </p>
+        </section>
       </main>
       <SiteFooter />
     </div>
