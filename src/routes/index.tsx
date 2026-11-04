@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Free BIN lookup and BIN checker. Enter the first 6 digits of any card to find the issuing bank, scheme, brand, card type, country and currency.",
+          "Free BIN lookup and BIN checker. Enter the first 6–8 digits of any card to search a growing BIN/IIN database and find the issuing bank, scheme, brand, card type, country and currency.",
       },
       { property: "og:title", content: "BIN Lookup & BIN Checker — Binly" },
       {
@@ -76,13 +76,33 @@ function Index() {
         <main className="flex-1 py-10 sm:py-14">
           <BinLookup hero={settings} />
           <PopularBins bins={popular} />
-          <p className="mx-auto mt-10 max-w-2xl px-4 text-center text-sm text-muted-foreground">
-            Prefer to browse?{" "}
-            <Link to="/bin-list" className="text-primary underline-offset-4 hover:underline">
-              View the full BIN list by country
-            </Link>
-            .
-          </p>
+          <section className="mx-auto mt-16 w-full max-w-3xl px-4">
+            <h2 className="font-display text-xl font-semibold text-foreground sm:text-2xl">
+              Free BIN lookup &amp; BIN checker
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Binly is a free BIN lookup and BIN checker for anyone who needs to know more about a payment card before
+              accepting it. Enter the first 6–8 digits of a credit or debit card into the BIN search above, and Binly
+              returns the issuing bank, card scheme, brand, card type, level, country and currency — instantly, with no
+              sign-up.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Every check also feeds the public{" "}
+              <Link to="/bin-list" className="text-primary underline-offset-4 hover:underline">
+                BIN/IIN database
+              </Link>
+              , where BINs are organised by country, bank and scheme so merchants, risk teams and developers can browse
+              a complete BIN list without running individual searches. Prefer curated groups? Explore the community{" "}
+              <Link to="/bins" className="text-primary underline-offset-4 hover:underline">
+                BIN categories
+              </Link>{" "}
+              or{" "}
+              <Link to="/contact" className="text-primary underline-offset-4 hover:underline">
+                contact the Binly team
+              </Link>{" "}
+              about BIN data.
+            </p>
+          </section>
         </main>
 
 

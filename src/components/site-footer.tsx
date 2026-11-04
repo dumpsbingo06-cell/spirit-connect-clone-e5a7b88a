@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { getSiteSettings, type SiteSettings } from "@/lib/site.api";
@@ -27,6 +28,23 @@ export function SiteFooter() {
             </p>
           </div>
         </div>
+        <nav
+          aria-label="Footer"
+          className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground"
+        >
+          <Link to="/" className="transition-colors hover:text-foreground">
+            BIN Lookup
+          </Link>
+          <Link to="/bin-list" className="transition-colors hover:text-foreground">
+            BIN List by Country
+          </Link>
+          <Link to="/bins" className="transition-colors hover:text-foreground">
+            BIN Categories
+          </Link>
+          <Link to="/contact" className="transition-colors hover:text-foreground">
+            Contact
+          </Link>
+        </nav>
         <div className="flex items-center gap-2 sm:justify-end">
           {s.telegram_url && (
             <button
