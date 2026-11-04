@@ -17,6 +17,7 @@ import {
   type CategoryBin,
 } from "@/lib/bin-categories.api";
 import { lookupBin } from "@/lib/bin-lookup.api";
+import { notifyIndexNow } from "@/lib/indexnow";
 
 export function AdminCategories() {
   const [cats, setCats] = useState<BinCategory[]>([]);

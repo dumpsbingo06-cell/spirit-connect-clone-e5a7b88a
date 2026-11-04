@@ -217,6 +217,58 @@ function CountryBinList() {
           </ol>
         </section>
 
+        <section className="mt-10 border-t border-border pt-8">
+          <h2 className="font-display text-xl font-semibold">{country.country_name} BIN list FAQs</h2>
+          <dl className="mt-4 max-w-3xl space-y-5 text-sm">
+            <div>
+              <dt className="font-semibold text-foreground">
+                How many {country.country_name} BINs are on this list?
+              </dt>
+              <dd className="mt-1 leading-relaxed text-muted-foreground">
+                There {bins.length === 1 ? "is" : "are"} {bins.length} {country.country_name} BIN
+                {bins.length === 1 ? "" : "s"} in the table above, issued by {banks.size}{" "}
+                {banks.size === 1 ? "bank" : "banks"}. The list is generated from real BIN checks on Binly, so new{" "}
+                {country.country_name} card ranges appear automatically as cards are looked up.
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">Is this {country.country_name} BIN list free?</dt>
+              <dd className="mt-1 leading-relaxed text-muted-foreground">
+                Yes. Every country BIN list on Binly is free to browse, and the{" "}
+                <Link to="/" className="text-primary underline-offset-4 hover:underline">
+                  BIN checker
+                </Link>{" "}
+                is free to use with no account needed.
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">
+                Which card schemes are common in {country.country_name}?
+              </dt>
+              <dd className="mt-1 leading-relaxed text-muted-foreground">
+                {schemes.length > 0
+                  ? `${country.country_name} cards on Binly are mostly ${schemes
+                      .slice(0, 3)
+                      .map(([s]) => s)
+                      .join(", ")}, with ${schemes[0][0]} the most common scheme in this list.`
+                  : `Scheme details for ${country.country_name} cards appear here as more cards are checked.`}
+              </dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-foreground">What can I do with a {country.country_name} BIN?</dt>
+              <dd className="mt-1 leading-relaxed text-muted-foreground">
+                A BIN tells you who issued a card before it is charged. Payment teams use {country.country_name} BIN
+                data to tell credit, debit and prepaid cards apart, spot foreign or commercial cards, and route
+                payments to the right processor. Check any individual card with the free{" "}
+                <Link to="/" className="text-primary underline-offset-4 hover:underline">
+                  Binly BIN lookup
+                </Link>
+                .
+              </dd>
+            </div>
+          </dl>
+        </section>
+
         {related.length > 0 && (
           <section className="mt-10 border-t border-border pt-8">
             <h2 className="font-display text-xl font-semibold">BIN lists for other countries</h2>

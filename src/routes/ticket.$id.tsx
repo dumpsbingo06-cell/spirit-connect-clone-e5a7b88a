@@ -14,7 +14,12 @@ const searchSchema = z.object({ token: z.string().uuid().optional().catch(undefi
 
 export const Route = createFileRoute("/ticket/$id")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Support ticket — Binly" }] }),
+  head: () => ({
+    meta: [
+      { title: "Support ticket — Binly" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: TicketPage,
 });
 

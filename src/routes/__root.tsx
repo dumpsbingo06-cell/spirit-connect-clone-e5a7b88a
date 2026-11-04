@@ -130,6 +130,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       }
       return links;
     })(),
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Binly",
+          url: "https://www.binly.xyz/",
+          logo: "https://www.binly.xyz/binly-icon.png",
+          description:
+            "Binly is a professional BIN/IIN lookup tool for identifying the issuing bank, scheme, brand, card type, country and currency behind any payment card.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Binly",
+          alternateName: "Binly BIN Lookup",
+          url: "https://www.binly.xyz/",
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

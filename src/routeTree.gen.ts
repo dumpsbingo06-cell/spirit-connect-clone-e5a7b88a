@@ -20,6 +20,7 @@ import { Route as BinListCountryRouteImport } from './routes/bin-list.$country'
 import { Route as BinsIndexRouteImport } from './routes/bins.index'
 import { Route as BinsSlugRouteImport } from './routes/bins.$slug'
 import { Route as TicketIdRouteImport } from './routes/ticket.$id'
+import { Route as ApiPublicIndexnowRouteImport } from './routes/api/public/indexnow'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +78,11 @@ const TicketIdRoute = TicketIdRouteImport.update({
   path: '/ticket/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicIndexnowRoute = ApiPublicIndexnowRouteImport.update({
+  id: '/api/public/indexnow',
+  path: '/api/public/indexnow',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list/': typeof BinListIndexRoute
   '/bins/': typeof BinsIndexRoute
+  '/api/public/indexnow': typeof ApiPublicIndexnowRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list': typeof BinListIndexRoute
   '/bins': typeof BinsIndexRoute
+  '/api/public/indexnow': typeof ApiPublicIndexnowRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/ticket/$id': typeof TicketIdRoute
   '/bin-list/': typeof BinListIndexRoute
   '/bins/': typeof BinsIndexRoute
+  '/api/public/indexnow': typeof ApiPublicIndexnowRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/ticket/$id'
     | '/bin-list/'
     | '/bins/'
+    | '/api/public/indexnow'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/ticket/$id'
     | '/bin-list'
     | '/bins'
+    | '/api/public/indexnow'
   id:
     | '__root__'
     | '/'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/ticket/$id'
     | '/bin-list/'
     | '/bins/'
+    | '/api/public/indexnow'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -172,6 +184,7 @@ export interface RootRouteChildren {
   TicketIdRoute: typeof TicketIdRoute
   BinListIndexRoute: typeof BinListIndexRoute
   BinsIndexRoute: typeof BinsIndexRoute
+  ApiPublicIndexnowRoute: typeof ApiPublicIndexnowRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/indexnow': {
+      id: '/api/public/indexnow'
+      path: '/api/public/indexnow'
+      fullPath: '/api/public/indexnow'
+      preLoaderRoute: typeof ApiPublicIndexnowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -268,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   TicketIdRoute: TicketIdRoute,
   BinListIndexRoute: BinListIndexRoute,
   BinsIndexRoute: BinsIndexRoute,
+  ApiPublicIndexnowRoute: ApiPublicIndexnowRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -23,6 +23,19 @@ export const Route = createFileRoute("/bins/")({
       { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: URL }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Binly", item: "https://www.binly.xyz/" },
+            { "@type": "ListItem", position: 2, name: "BIN Categories", item: URL },
+          ],
+        }),
+      },
+    ],
   }),
   component: BinsIndex,
 });

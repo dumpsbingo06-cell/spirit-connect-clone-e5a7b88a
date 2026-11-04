@@ -21,11 +21,18 @@ export const Route = createFileRoute("/bins/$slug")({
     return { category, bins };
   },
   head: ({ loaderData }) => {
-    const name = loaderData?.category.name ?? "BIN Category";
-    const title = `${name} — BIN List | Binly`;
+    if (!loaderData) {
+      return {
+        meta: [{ title: "Unavailable — Binly" }, { name: "robots", content: "noindex" }],
+      };
+    }
+    const name = loaderData.category.name;
+    const count = loaderData.bins.length;
+    const title = `${name} — BIN List with Full Card Details | Binly`;
     const desc =
-      loaderData?.category.description ||
-      `${loaderData?.bins.length ?? 0} curated ${name} on Binly. Check any of them instantly with our free BIN lookup.`;
+      loaderData.category.description ||
+      `${count} curated ${name} with the issuing bank, card scheme, brand, card type, level, country and currency shown for every BIN. Check any card instantly with the free Binly BIN lookup.`;
+    const url = `https://www.binly.xyz/bins/${loaderData.category.slug}`;
     return {
       meta: [
         { title },
@@ -33,9 +40,24 @@ export const Route = createFileRoute("/bins/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: loaderData ? [{ rel: "canonical", href: `https://binly.xyz/bins/${loaderData.category.slug}` }] : [],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Binly", item: "https://www.binly.xyz/" },
+              { "@type": "ListItem", position: 2, name: "BIN Categories", item: "https://www.binly.xyz/bins" },
+              { "@type": "ListItem", position: 3, name, item: url },
+            ],
+          }),
+        },
+      ],
     };
   },
   notFoundComponent: () => (
