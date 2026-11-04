@@ -5,7 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Admin sign in" }] }),
+  head: () => ({
+    meta: [
+      { title: "Admin sign in — Binly" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AuthPage,
 });
 

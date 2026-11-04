@@ -13,8 +13,35 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Binly" },
-      { name: "description", content: "Reach the Binly team." },
+      { title: "Contact Binly — BIN Data Questions, Corrections & Support" },
+      {
+        name: "description",
+        content:
+          "Get in touch with the Binly team. Ask a question about BIN data or the BIN checker, report an incorrect BIN record, or suggest a new BIN category — every message opens a ticket you can follow by link.",
+      },
+      { property: "og:title", content: "Contact Binly — Support & Feedback" },
+      {
+        property: "og:description",
+        content:
+          "Send the Binly team a message about BIN data, categories or the BIN checker. Every message opens a trackable ticket.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.binly.xyz/contact" },
+      { name: "twitter:card", content: "summary" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.binly.xyz/contact" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Binly", item: "https://www.binly.xyz/" },
+            { "@type": "ListItem", position: 2, name: "Contact", item: "https://www.binly.xyz/contact" },
+          ],
+        }),
+      },
     ],
   }),
   component: ContactPage,
