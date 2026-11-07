@@ -110,7 +110,7 @@ function BinsIndex() {
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-forum-muted">
             Every entry in a collection shows its issuing bank, card scheme, brand, card type, level, country and currency. You can
             verify any of them instantly with the free{" "}
-              className="text-forum-accent underline-offset-4 hover:underline"
+            <Link to="/" className="text-forum-accent underline-offset-4 hover:underline">
               Binly BIN checker
             </Link>
             .
