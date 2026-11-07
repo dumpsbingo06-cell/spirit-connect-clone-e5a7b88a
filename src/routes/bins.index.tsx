@@ -46,8 +46,8 @@ function BinsIndex() {
   return (
     <div className="forum-page flex min-h-screen flex-col">
       <SiteHeader variant="forum" />
-      <div aria-hidden className="forum-pattern pointer-events-none absolute inset-x-0 top-14 h-72 opacity-40" />
-      <main className="relative mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
+      <div aria-hidden className="forum-pattern pointer-events-none absolute inset-x-0 top-14 z-0 h-72 opacity-40" />
+      <main className="relative z-10 mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
         <div className="flex flex-wrap items-center justify-between gap-5 border-b border-forum-line pb-5">
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase text-forum-accent">

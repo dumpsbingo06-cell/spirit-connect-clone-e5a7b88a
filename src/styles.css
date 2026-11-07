@@ -158,6 +158,18 @@
 }
 
 .forum-page {
+  --background: var(--forum-canvas);
+  --foreground: var(--forum-ink);
+  --card: var(--forum-panel);
+  --card-foreground: var(--forum-ink);
+  --primary: var(--forum-accent);
+  --primary-foreground: var(--forum-accent-foreground);
+  --muted: var(--forum-raised);
+  --muted-foreground: var(--forum-muted);
+  --accent: var(--forum-raised);
+  --accent-foreground: var(--forum-ink);
+  --border: var(--forum-line);
+  --input: var(--forum-line);
   background-color: var(--forum-canvas);
   color: var(--forum-ink);
 }
