@@ -3,3 +3,4 @@
 - [x] Polish the Categories homepage using the existing dark style.
 - [x] Verify category navigation and country lists in the preview.
 - [ ] Restyle the existing editable Categories directory as a forum-style board index, without sample posts or categories, and verify it in the preview.
+- [ ] Add member topic and reply forms using existing forum data only, then verify sign-in and posting in the preview.
