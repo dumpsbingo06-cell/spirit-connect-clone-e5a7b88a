@@ -76,6 +76,7 @@ export function ForumTopicForm({ categories }: { categories: ForumCategory[] }) 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -85,6 +86,7 @@ export function ForumTopicForm({ categories }: { categories: ForumCategory[] }) 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    setSuccess(null);
     const parsed = forumTopicSchema.safeParse({ categoryId, title, body, username: member.username });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "Check the topic details and try again.");
@@ -94,9 +96,11 @@ export function ForumTopicForm({ categories }: { categories: ForumCategory[] }) 
     setSubmitting(true);
     try {
       const topicId = await createForumTopic(parsed.data);
+      void topicId;
       setTitle("");
       setBody("");
-      await router.navigate({ to: "/forum/$threadId", params: { threadId: topicId } });
+      setSuccess("Your topic was posted.");
+      await router.invalidate();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Your topic could not be posted.");
     } finally {
@@ -179,6 +183,7 @@ export function ForumTopicForm({ categories }: { categories: ForumCategory[] }) 
         />
       </label>
       {(error || member.profileError) && <p role="alert" className="text-sm text-destructive">{error ?? member.profileError}</p>}
+      {success && <p role="status" className="text-sm text-forum-accent">{success}</p>}
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs text-forum-muted">{body.length.toLocaleString()} / 10,000</span>
         <Button type="submit" disabled={submitting || !member.userId} className="bg-forum-accent text-forum-accent-foreground hover:bg-forum-accent/90">
