@@ -29,6 +29,13 @@
       "when": 1791011867795,
       "tag": "0003_link_popular_bins_and_expose_category_details",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794382865495,
+      "tag": "0004_validate_forum_form_content",
+      "breakpoints": true
     }
   ]
 }
